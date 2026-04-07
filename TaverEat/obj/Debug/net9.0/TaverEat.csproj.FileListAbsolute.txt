@@ -1,0 +1,14 @@
+C:\Users\dafne\Desktop\Projecte Final\TaverEat\bin\Debug\net9.0\TaverEat.exe
+C:\Users\dafne\Desktop\Projecte Final\TaverEat\bin\Debug\net9.0\TaverEat.deps.json
+C:\Users\dafne\Desktop\Projecte Final\TaverEat\bin\Debug\net9.0\TaverEat.runtimeconfig.json
+C:\Users\dafne\Desktop\Projecte Final\TaverEat\bin\Debug\net9.0\TaverEat.dll
+C:\Users\dafne\Desktop\Projecte Final\TaverEat\bin\Debug\net9.0\TaverEat.pdb
+C:\Users\dafne\Desktop\Projecte Final\TaverEat\obj\Debug\net9.0\TaverEat.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\dafne\Desktop\Projecte Final\TaverEat\obj\Debug\net9.0\TaverEat.AssemblyInfoInputs.cache
+C:\Users\dafne\Desktop\Projecte Final\TaverEat\obj\Debug\net9.0\TaverEat.AssemblyInfo.cs
+C:\Users\dafne\Desktop\Projecte Final\TaverEat\obj\Debug\net9.0\TaverEat.csproj.CoreCompileInputs.cache
+C:\Users\dafne\Desktop\Projecte Final\TaverEat\obj\Debug\net9.0\TaverEat.dll
+C:\Users\dafne\Desktop\Projecte Final\TaverEat\obj\Debug\net9.0\refint\TaverEat.dll
+C:\Users\dafne\Desktop\Projecte Final\TaverEat\obj\Debug\net9.0\TaverEat.pdb
+C:\Users\dafne\Desktop\Projecte Final\TaverEat\obj\Debug\net9.0\TaverEat.genruntimeconfig.cache
+C:\Users\dafne\Desktop\Projecte Final\TaverEat\obj\Debug\net9.0\ref\TaverEat.dll
