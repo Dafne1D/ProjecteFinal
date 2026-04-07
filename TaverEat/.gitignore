@@ -1,0 +1,52 @@
+# Archivos compilados
+bin/
+obj/
+
+# Usuario / IDE (Visual Studio, VS Code, Rider)
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# VS Code
+.vscode/
+
+# Rider
+.idea/
+
+# Archivos temporales
+*.log
+*.tmp
+*.temp
+
+# NuGet packages
+packages/
+*.nupkg
+*.snupkg
+
+# Archivos generados automáticamente
+Generated_Code/
+
+# Archivos de publicación
+publish/
+*.publishsettings
+
+# Configuraciones sensibles
+appsettings.Development.json
+appsettings.*.local.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage / testing
+TestResults/
+coverage/
+
+# Archivos de base de datos local
+*.mdf
+*.ldf
+
+# Archivos de secrets (muy importante)
+secrets.json
