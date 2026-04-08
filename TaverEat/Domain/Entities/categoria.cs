@@ -1,6 +1,6 @@
 namespace Domain.Entities;
 public class Categoria
 {
-    public required string Nom { get; set; }
+    public required Guid Nom { get; set; }
 
 }

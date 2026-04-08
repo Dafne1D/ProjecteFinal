@@ -1,12 +1,12 @@
 using Microsoft.Data.SqlClient;
 
-namespace SpotifyAPI.Services
+namespace API.Services
 {
-    public class SpotifyDBConnection
+    public class TaverDBConnection
     {
         private readonly string _connectionString;
         public SqlConnection? sqlConnection;
-        public SpotifyDBConnection(string connectionString)
+        public TaverDBConnection(string connectionString)
         {
             _connectionString = connectionString;
         }
@@ -27,6 +27,7 @@ namespace SpotifyAPI.Services
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 return false;
             }
         }
