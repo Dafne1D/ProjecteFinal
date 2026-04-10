@@ -2,7 +2,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaverEat", "TaverEat\TaverEat.csproj", "{2EA58262-C360-5D2B-214E-3EFDB4A73B7B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{1AE8ACA6-933B-BF2A-3671-3E2EAC007D16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaverEat", "Backend\TaverEat\TaverEat.csproj", "{2F21F6C0-8A62-EB43-FA23-CA89455AC4AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -10,15 +12,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2EA58262-C360-5D2B-214E-3EFDB4A73B7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2EA58262-C360-5D2B-214E-3EFDB4A73B7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2EA58262-C360-5D2B-214E-3EFDB4A73B7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2EA58262-C360-5D2B-214E-3EFDB4A73B7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F21F6C0-8A62-EB43-FA23-CA89455AC4AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F21F6C0-8A62-EB43-FA23-CA89455AC4AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F21F6C0-8A62-EB43-FA23-CA89455AC4AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F21F6C0-8A62-EB43-FA23-CA89455AC4AE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2F21F6C0-8A62-EB43-FA23-CA89455AC4AE} = {1AE8ACA6-933B-BF2A-3671-3E2EAC007D16}
+	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {7599BB2A-FA4C-4298-8647-38CF1247FC83}
+		SolutionGuid = {CFAFFDD6-63AB-45D5-84A2-2BB9FBAD726F}
 	EndGlobalSection
 EndGlobal
