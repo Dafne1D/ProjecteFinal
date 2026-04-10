@@ -3,10 +3,7 @@
 import { useState, useEffect } from "react";
 import CategoryCard from "../components/CategoryCard";
 import { Search, MapPin, AlertCircle, Menu, User } from "lucide-react";
-
-interface Category {
-  nom: string;
-}
+import { getCategories, Category } from "../Services/categoryAPI";
 
 export default function Home() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -16,14 +13,14 @@ export default function Home() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch("http://localhost:5000/categories");
-        if (!res.ok) {
-          throw new Error("Error al obtener las categorías");
-        }
-        const data = await res.json();
+        const data = await getCategories();
         setCategories(data);
-      } catch (err : unknown) {
-        setError(err instanceof Error ? err.message : "Error al conectar con el servidor.");
+      } catch (err: unknown) {
+        setError(
+          err instanceof Error
+            ? err.message
+            : "Error al conectar con el servidor."
+        );
       } finally {
         setIsLoading(false);
       }
@@ -75,7 +72,7 @@ export default function Home() {
       {/* Main Content */}
       <main className="flex-1 px-5 py-6 overflow-y-auto">
 
-        {/* Loading Skeleton */}
+        {/* Loading */}
         {isLoading && (
           <div className="space-y-4">
             <h2 className="text-xl font-extrabold text-slate-800 mb-4 tracking-tight">
@@ -83,7 +80,10 @@ export default function Home() {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
               {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} className="bg-white rounded-2xl shadow-sm border border-slate-100 p-3 flex items-center space-x-4 animate-pulse">
+                <div
+                  key={i}
+                  className="bg-white rounded-2xl shadow-sm border border-slate-100 p-3 flex items-center space-x-4 animate-pulse"
+                >
                   <div className="w-20 h-20 bg-slate-200 rounded-xl shrink-0"></div>
                   <div className="flex-1 space-y-3 py-2">
                     <div className="h-4 bg-slate-200 rounded-full w-3/4"></div>
@@ -95,13 +95,15 @@ export default function Home() {
           </div>
         )}
 
-        {/* Error State */}
+        {/* Error */}
         {error && (
           <div className="flex flex-col items-center justify-center h-64 text-slate-500 bg-white rounded-3xl shadow-sm border border-slate-100 p-8 text-center">
             <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mb-4">
               <AlertCircle className="w-8 h-8" />
             </div>
-            <h3 className="text-lg font-bold text-slate-800 mb-2">¡Ups! Hi ha un error</h3>
+            <h3 className="text-lg font-bold text-slate-800 mb-2">
+              ¡Ups! Hi ha un error
+            </h3>
             <p className="text-sm">{error}</p>
             <button
               onClick={() => window.location.reload()}
@@ -112,18 +114,20 @@ export default function Home() {
           </div>
         )}
 
-        {/* Empty State */}
+        {/* Empty */}
         {!isLoading && !error && categories.length === 0 && (
           <div className="flex flex-col items-center justify-center h-64 text-slate-500 bg-white rounded-3xl shadow-sm border border-slate-100 p-8 text-center">
             <div className="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mb-4">
               <Search className="w-8 h-8" />
             </div>
-            <h3 className="text-lg font-bold text-slate-800 mb-2">Sense resultats</h3>
+            <h3 className="text-lg font-bold text-slate-800 mb-2">
+              Sense resultats
+            </h3>
             <p className="text-sm">Sense categories disponibles</p>
           </div>
         )}
 
-        {/* Categories List */}
+        {/* Data */}
         {!isLoading && !error && categories.length > 0 && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
             <h2 className="text-xl font-extrabold text-slate-800 mb-4 tracking-tight">

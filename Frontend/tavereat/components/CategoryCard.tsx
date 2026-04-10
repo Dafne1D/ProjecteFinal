@@ -19,11 +19,6 @@ export default function CategoryCard({ title }: CategoryCardProps) {
         <h3 className="text-lg font-bold text-gray-800 truncate group-hover:text-emerald-600 transition-colors">
           {title}
         </h3>
-        {/* Línea secundaria decorativa */}
-        <p className="text-sm text-gray-500 truncate mt-1 flex items-center">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 mr-2"></span>
-          Popular cerca de ti
-        </p>
       </div>
 
       {/* Arrow */}

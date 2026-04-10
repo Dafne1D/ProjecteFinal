@@ -36,7 +36,7 @@ static class CategoriaADO
         {
             categories.Add(new Categoria
             {
-                Nom = reader.GetGuid(0),
+                Nom = reader.GetString(0),
             });
         }
 
@@ -59,7 +59,7 @@ static class CategoriaADO
         {
             categoria = new Categoria
             {
-                Nom = reader.GetGuid(0),
+                Nom = reader.GetString(0),
             };
         }
 
