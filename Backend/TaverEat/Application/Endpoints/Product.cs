@@ -5,21 +5,19 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
 namespace Application.Endpoints;
-
-public static class CategoriaEndpoints
+public static class ProductEndpoint
 {
-    public static void MapCategoriaEndpoints(this WebApplication app)
+    public static void MapProductEndpoints(this WebApplication app)
     {
-        // GET categories
-        app.MapGet("/categories", (TaverDBConnection dbConn) =>
+        // GET productsByCategoryNom
+        app.MapGet("/products/category/{categoryNom}", (string categoryNom, TaverDBConnection dbConn) =>
         {
-            // Abrir la conexión
             if (!dbConn.Open())
                 return Results.Problem("No s'ha pogut connectar amb la base de dades");
             try
             {
-                var categorias = CategoriaADO.GetAll(dbConn);
-                return Results.Ok(categorias);
+                var products = ProductADO.GetByCategoryNom(dbConn, categoryNom);
+                return Results.Ok(products);
             }
             finally
             {

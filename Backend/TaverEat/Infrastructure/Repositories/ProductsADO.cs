@@ -50,7 +50,7 @@ static class ProductADO
         return products;
     }
 
-public static List<Product> GetByCategoryNom(TaverDBConnection dbConn, Guid categoryNom)
+public static List<Product> GetByCategoryNom(TaverDBConnection dbConn, string categoryNom)
 {
     dbConn.Open();
 
