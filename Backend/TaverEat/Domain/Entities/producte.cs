@@ -4,5 +4,5 @@ public class Product
     public required string Nom { get; set; }
     public required string Descripcio { get; set; }
     public decimal Preu { get; set; }
-    public required string CategoryNom { get; set; }
+    public required string Categoria_nom { get; set; }
 }

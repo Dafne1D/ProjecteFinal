@@ -8,7 +8,7 @@ export const getCategories = async (): Promise<Category[]> => {
   const res = await fetch(`${API_URL}/categories`);
 
   if (!res.ok) {
-    throw new Error("Error en obtenr les categories");
+    throw new Error("Error en obtenir les categories");
   }
 
   return res.json();

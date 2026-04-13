@@ -26,5 +26,6 @@ app.UseCors("AllowFrontend");
 // Endpoints
 // -----------------------------
 app.MapCategoriaEndpoints();
+app.MapProductEndpoints();
 
 app.Run();

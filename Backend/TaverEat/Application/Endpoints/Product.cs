@@ -9,14 +9,14 @@ public static class ProductEndpoint
 {
     public static void MapProductEndpoints(this WebApplication app)
     {
-        // GET productsByCategoryNom
-        app.MapGet("/products/category/{categoryNom}", (string categoryNom, TaverDBConnection dbConn) =>
+        // GET productsBycategoia_nom
+        app.MapGet("/products/category/{categoia_nom}", (string categoia_nom, TaverDBConnection dbConn) =>
         {
             if (!dbConn.Open())
                 return Results.Problem("No s'ha pogut connectar amb la base de dades");
             try
             {
-                var products = ProductADO.GetByCategoryNom(dbConn, categoryNom);
+                var products = ProductADO.GetByCategoriaNom(dbConn, categoia_nom);
                 return Results.Ok(products);
             }
             finally

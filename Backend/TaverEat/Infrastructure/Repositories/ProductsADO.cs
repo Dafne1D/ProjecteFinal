@@ -10,18 +10,16 @@ static class ProductADO
     {
         dbConn.Open();
 
-        string sql = @"INSERT INTO Product (Nom, Descripcio, Preu, CategoryNom)
-                    VALUES (@Nom, @Descripcio, @Preu, @CategoryNom)";
+        string sql = @"INSERT INTO producte (Nom, Descripcio, Preu, Categoria_nom)
+                       VALUES (@Nom, @Descripcio, @Preu, @Categoria_nom)";
 
         using SqlCommand cmd = new SqlCommand(sql, dbConn.sqlConnection);
         cmd.Parameters.AddWithValue("@Nom", product.Nom);
         cmd.Parameters.AddWithValue("@Descripcio", product.Descripcio);
         cmd.Parameters.AddWithValue("@Preu", product.Preu);
-        cmd.Parameters.AddWithValue("@CategoryNom", product.CategoryNom);
+        cmd.Parameters.AddWithValue("@Categoria_nom", product.Categoria_nom);
 
-        int rows = cmd.ExecuteNonQuery();
-        Console.WriteLine($"{rows} fila inserida.");
-
+        cmd.ExecuteNonQuery();
         dbConn.Close();
     }
 
@@ -30,7 +28,8 @@ static class ProductADO
         List<Product> products = new();
 
         dbConn.Open();
-        string sql = "SELECT Nom FROM Product";
+
+        string sql = @"SELECT Nom, Descripcio, Preu, Categoria_nom FROM producte";
 
         using SqlCommand cmd = new SqlCommand(sql, dbConn.sqlConnection);
         using SqlDataReader reader = cmd.ExecuteReader();
@@ -42,7 +41,7 @@ static class ProductADO
                 Nom = reader.GetString(0),
                 Descripcio = reader.GetString(1),
                 Preu = reader.GetDecimal(2),
-                CategoryNom = reader.GetString(3)
+                Categoria_nom = reader.GetString(3)
             });
         }
 
@@ -50,73 +49,67 @@ static class ProductADO
         return products;
     }
 
-public static List<Product> GetByCategoryNom(TaverDBConnection dbConn, string categoryNom)
-{
-    dbConn.Open();
-
-    string sql = @"SELECT Nom, Descripcio, Preu
-        FROM Products
-        WHERE CategoryNom = @CategoryNom";
-
-    using SqlCommand cmd = new SqlCommand(sql, dbConn.sqlConnection);
-    cmd.Parameters.AddWithValue("@CategoryNom", categoryNom);
-
-    using SqlDataReader reader = cmd.ExecuteReader();
-
-    List<Product> products = new List<Product>();
-
-    while (reader.Read())
+    public static List<Product> GetByCategoriaNom(TaverDBConnection dbConn, string Categoria_nom)
     {
-        products.Add(new Product
+        dbConn.Open();
+
+        string sql = @"SELECT Nom, Descripcio, Preu, Categoria_nom
+                       FROM producte
+                       WHERE Categoria_nom = @Categoria_nom";
+
+        using SqlCommand cmd = new SqlCommand(sql, dbConn.sqlConnection);
+        cmd.Parameters.AddWithValue("@Categoria_nom", Categoria_nom);
+
+        using SqlDataReader reader = cmd.ExecuteReader();
+
+        List<Product> products = new();
+
+        while (reader.Read())
         {
-            Nom = reader.GetString(0),
-            Descripcio = reader.GetString(1),
-            Preu = reader.GetDecimal(2),
-            CategoryNom = reader.GetString(3)
-        });
+            products.Add(new Product
+            {
+                Nom = reader.GetString(0),
+                Descripcio = reader.GetString(1),
+                Preu = reader.GetDecimal(2),
+                Categoria_nom = reader.GetString(3)
+            });
+        }
+
+        dbConn.Close();
+        return products;
     }
 
-    dbConn.Close();
-    return products;
-}
     public static void Update(TaverDBConnection dbConn, Product product)
     {
         dbConn.Open();
 
-        string sql = @"UPDATE Product SET
-                    Nom = @Nom,
-                    Descripcio = @Descripcio,
-                    Preu = @Preu,
-                    CategoryNom = @CategoryNom
-                    WHERE Nom = @Nom";
+        string sql = @"UPDATE producte SET
+                       Descripcio = @Descripcio,
+                       Preu = @Preu,
+                       Categoria_nom = @Categoria_nom
+                       WHERE Nom = @Nom";
 
         using SqlCommand cmd = new SqlCommand(sql, dbConn.sqlConnection);
         cmd.Parameters.AddWithValue("@Nom", product.Nom);
         cmd.Parameters.AddWithValue("@Descripcio", product.Descripcio);
         cmd.Parameters.AddWithValue("@Preu", product.Preu);
-        cmd.Parameters.AddWithValue("CategoryNom", product.CategoryNom);
-
-
-        int rows = cmd.ExecuteNonQuery();
-
-        Console.WriteLine($"{rows} files actualitzades");
-
+        cmd.Parameters.AddWithValue("@Categoria_nom", product.Categoria_nom);
+          cmd.ExecuteNonQuery();
         dbConn.Close();
     }
 
-    public static bool Delete(TaverDBConnection dbConn, string Nom)
+    public static bool Delete(TaverDBConnection dbConn, string nom)
     {
         dbConn.Open();
 
-        string sql = @"DELETE FROM Product WHERE Nom = @Nom";
+        string sql = @"DELETE FROM producte WHERE Nom = @Nom";
 
         using SqlCommand cmd = new SqlCommand(sql, dbConn.sqlConnection);
-        cmd.Parameters.AddWithValue("@Nom", Nom);
+        cmd.Parameters.AddWithValue("@Nom", nom);
 
         int rows = cmd.ExecuteNonQuery();
 
         dbConn.Close();
-
         return rows > 0;
     }
 }
