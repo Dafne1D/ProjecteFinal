@@ -1,4 +1,4 @@
-﻿using API.Services;
+using API.Services;
 using Application.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,5 +27,6 @@ app.UseCors("AllowFrontend");
 // -----------------------------
 app.MapCategoriaEndpoints();
 app.MapProductEndpoints();
+app.MapImgUrlEndpoints();
 
 app.Run();

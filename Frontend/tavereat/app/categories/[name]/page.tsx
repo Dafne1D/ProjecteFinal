@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
+import { getCategoryImageUrl } from "../../../Services/categoryAPI";
 
 interface Product {
   nom: string;
@@ -101,28 +102,39 @@ export default function CategoryPage() {
             {products.map((p, i) => (
               <div
                 key={i}
-                className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 hover:shadow-md transition"
+                className="group bg-white rounded-2xl border border-slate-100 shadow-sm p-3 hover:shadow-md transition flex items-center space-x-4"
               >
+                {/* IMAGE ON THE SIDE (Like CategoryCard) */}
+                <div className="relative w-24 h-24 bg-sky-50 rounded-xl overflow-hidden shrink-0">
+                  <img 
+                    src={getCategoryImageUrl(decodeURIComponent(name))} 
+                    alt={p.nom}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                </div>
 
-                {/* NAME */}
-                <h2 className="font-bold text-slate-800 text-lg">
-                  {p.nom}
-                </h2>
+                {/* CONTENT */}
+                <div className="flex-1 min-w-0 py-1">
+                  {/* NAME */}
+                  <h2 className="font-bold text-slate-800 text-lg truncate group-hover:text-sky-600 transition-colors">
+                    {p.nom}
+                  </h2>
 
-                {/* DESC */}
-                <p className="text-sm text-slate-500 mt-1">
-                  {p.descripcio}
-                </p>
+                  {/* DESC */}
+                  <p className="text-sm text-slate-500 mt-0.5 line-clamp-2">
+                    {p.descripcio}
+                  </p>
 
-                {/* PRICE */}
-                <div className="mt-4 flex items-center justify-between">
-                  <span className="text-sky-500 font-bold text-lg">
-                    {p.preu} €
-                  </span>
+                  {/* PRICE & BUTTON */}
+                  <div className="mt-2 flex items-center justify-between">
+                    <span className="text-sky-500 font-bold text-lg">
+                      {p.preu} €
+                    </span>
 
-                  <button className="px-4 py-1.5 bg-sky-500 hover:bg-sky-600 text-white text-sm rounded-full transition">
-                    Afegir
-                  </button>
+                    <button className="px-4 py-1.5 bg-sky-500 hover:bg-sky-600 text-white text-sm rounded-full transition active:scale-95">
+                      Afegir
+                    </button>
+                  </div>
                 </div>
 
               </div>

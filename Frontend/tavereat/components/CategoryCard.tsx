@@ -1,4 +1,5 @@
 import { ChevronRight } from "lucide-react";
+import { getCategoryImageUrl } from "../Services/categoryAPI";
 
 interface CategoryCardProps {
   title: string;
@@ -7,11 +8,13 @@ interface CategoryCardProps {
 export default function CategoryCard({ title }: CategoryCardProps) {
   return (
     <div className="group bg-white rounded-2xl shadow-sm border border-gray-100 p-3 flex items-center space-x-4 transition-all hover:shadow-md hover:-translate-y-1 cursor-pointer active:scale-95">
-      {/* Placeholder Image */}
+      {/* Category Image */}
       <div className="relative w-20 h-20 bg-sky-50 rounded-xl overflow-hidden shrink-0 flex items-center justify-center border border-sky-100">
-        <span className="text-2xl font-bold text-sky-600 opacity-60">
-          {title.charAt(0).toUpperCase()}
-        </span>
+        <img 
+          src={getCategoryImageUrl(title)} 
+          alt={title}
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+        />
       </div>
 
       {/* Content */}
