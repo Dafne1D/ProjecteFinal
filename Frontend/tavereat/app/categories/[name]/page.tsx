@@ -3,13 +3,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import { getCategoryImageUrl } from "../../../Services/categoryAPI";
-
-interface Product {
-  nom: string;
-  descripcio: string;
-  preu: number;
-}
+import { getProductsByCategory, Product } from "../../../Services/productAPI";
+import { getProductImage } from "../../../Services/imgUrlAPI";
 
 export default function CategoryPage() {
   const params = useParams();
@@ -19,18 +14,34 @@ export default function CategoryPage() {
 
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [productImages, setProductImages] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (!name) return;
 
     const fetchProducts = async () => {
       try {
-        const res = await fetch(
-          `http://localhost:5000/products/category/${name}`
+        const data = await getProductsByCategory(name);
+        setProducts(data);
+
+        // 🔥 Cargar imágenes desde BD usando ID
+        const images: Record<string, string> = {};
+
+        await Promise.all(
+          data.map(async (p) => {
+            if (p.id) {
+              const imgUrl = await getProductImage(p.id);
+              if (imgUrl) {
+                images[p.id] = imgUrl;
+              }
+            }
+          })
         );
 
-        const data = await res.json();
-        setProducts(data);
+        setProductImages(images);
+
+      } catch (err) {
+        console.error("Error loading products", err);
       } finally {
         setLoading(false);
       }
@@ -72,10 +83,7 @@ export default function CategoryPage() {
         {loading && (
           <div className="space-y-4">
             {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className="h-24 bg-slate-200 animate-pulse rounded-xl"
-              />
+              <div key={i} className="h-24 bg-slate-200 animate-pulse rounded-xl" />
             ))}
           </div>
         )}
@@ -83,55 +91,51 @@ export default function CategoryPage() {
         {/* EMPTY */}
         {!loading && products.length === 0 && (
           <div className="text-center mt-20">
-            <div className="w-16 h-16 mx-auto bg-sky-50 rounded-full flex items-center justify-center mb-4">
-              <span className="text-sky-400 text-xl">🍽️</span>
-            </div>
-
             <h2 className="text-lg font-bold text-slate-800">
               No hi ha productes
             </h2>
-            <p className="text-slate-500 text-sm mt-1">
-              Aquesta categoria està buida
-            </p>
           </div>
         )}
 
         {/* PRODUCTS */}
         {!loading && products.length > 0 && (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {products.map((p, i) => (
+            {products.map((p) => (
               <div
-                key={i}
+                key={p.id}
                 className="group bg-white rounded-2xl border border-slate-100 shadow-sm p-3 hover:shadow-md transition flex items-center space-x-4"
               >
-                {/* IMAGE ON THE SIDE (Like CategoryCard) */}
-                <div className="relative w-24 h-24 bg-sky-50 rounded-xl overflow-hidden shrink-0">
-                  <img 
-                    src={getCategoryImageUrl(decodeURIComponent(name))} 
-                    alt={p.nom}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                  />
+                {/* IMAGE SOLO BD */}
+                <div className="relative w-24 h-24 bg-slate-100 rounded-xl overflow-hidden shrink-0">
+                  {productImages[p.id] ? (
+                    <img 
+                      src={productImages[p.id]} 
+                      alt={p.nom}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-slate-400 text-sm">
+                      Sin imagen
+                    </div>
+                  )}
                 </div>
 
                 {/* CONTENT */}
                 <div className="flex-1 min-w-0 py-1">
-                  {/* NAME */}
-                  <h2 className="font-bold text-slate-800 text-lg truncate group-hover:text-sky-600 transition-colors">
+                  <h2 className="font-bold text-slate-800 text-lg truncate">
                     {p.nom}
                   </h2>
 
-                  {/* DESC */}
                   <p className="text-sm text-slate-500 mt-0.5 line-clamp-2">
                     {p.descripcio}
                   </p>
 
-                  {/* PRICE & BUTTON */}
                   <div className="mt-2 flex items-center justify-between">
                     <span className="text-sky-500 font-bold text-lg">
                       {p.preu} €
                     </span>
 
-                    <button className="px-4 py-1.5 bg-sky-500 hover:bg-sky-600 text-white text-sm rounded-full transition active:scale-95">
+                    <button className="px-4 py-1.5 bg-sky-500 hover:bg-sky-600 text-white text-sm rounded-full transition">
                       Afegir
                     </button>
                   </div>

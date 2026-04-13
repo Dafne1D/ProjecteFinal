@@ -8,7 +8,7 @@ public static class ImgUrlEndpoint
     public static void MapImgUrlEndpoints(this WebApplication app)
     {
         // GET product/{product_id}/image
-        app.MapGet("/products/{product_id}/image", (Guid product_id, TaverDBConnection dbConn) =>
+        app.MapGet("/img_url/{product_id:guid}/image", (Guid product_id, TaverDBConnection dbConn) =>
         {
             if (!dbConn.Open())
                 return Results.Problem("No s'ha pogut connectar amb la base de dades");
