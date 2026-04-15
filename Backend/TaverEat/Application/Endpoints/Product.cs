@@ -23,6 +23,26 @@ public static class ProductEndpoint
             {
                 dbConn.Close();
             }
+        });   
+
+        // GET imgs for the products
+        app.MapGet("/products/category/{categoria_nom}/full", (string categoria_nom, TaverDBConnection dbConn) =>
+        {
+            if (!dbConn.Open())
+                return Results.Problem("No s'ha pogut connectar amb la base de dades");
+            try
+            {
+                var productsAndImages = ProductADO.GetProductsWithImagesByCategoriaNom(dbConn, categoria_nom);
+                var productResponses = productsAndImages.Select(p => 
+                    TaverEat.Infrastructure.DTO.ProductResponse.FromProduct(p.product, p.imgUrl)
+                ).ToList();
+
+                return Results.Ok(productResponses);
+            }
+            finally
+            {
+                dbConn.Close();
+            }
         });
     }  
 }

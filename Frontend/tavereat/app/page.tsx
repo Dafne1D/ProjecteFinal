@@ -111,6 +111,7 @@ export default function Home() {
             </h2>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+
               {categories.map((category) => (
                 <Link
                   key={category.nom}
