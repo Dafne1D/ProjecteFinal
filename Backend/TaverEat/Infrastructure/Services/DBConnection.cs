@@ -24,7 +24,15 @@ namespace API.Services
 
         public bool Open()
         {
-            sqlConnection = new SqlConnection(_connectionString);
+            if (sqlConnection == null)
+            {
+                sqlConnection = new SqlConnection(_connectionString);
+            }
+
+            if (sqlConnection.State == System.Data.ConnectionState.Open)
+            {
+                return true;
+            }
 
             try
             {

@@ -44,5 +44,25 @@ public static class ProductEndpoint
                 dbConn.Close();
             }
         });
+
+        // GET products search
+        app.MapGet("/products/search", (string q, TaverDBConnection dbConn) =>
+        {
+            if (!dbConn.Open())
+                return Results.Problem("No s'ha pogut connectar amb la base de dades");
+            try
+            {
+                var productsAndImages = ProductADO.SearchProductsWithImages(dbConn, q);
+                var productResponses = productsAndImages.Select(p => 
+                    TaverEat.Infrastructure.DTO.ProductResponse.FromProduct(p.product, p.imgUrl)
+                ).ToList();
+
+                return Results.Ok(productResponses);
+            }
+            finally
+            {
+                dbConn.Close();
+            }
+        });
     }  
 }

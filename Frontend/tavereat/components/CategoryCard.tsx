@@ -5,8 +5,6 @@ import Image from "next/image";
 import { ChevronRight } from "lucide-react";
 
 import { getProductsByCategory } from "../Services/productAPI";
-import { getProductImage } from "../Services/imgUrlAPI";
-import { Console } from "console";
 
 interface CategoryCardProps {
   title: string;
@@ -23,11 +21,9 @@ export default function CategoryCard({ title }: CategoryCardProps) {
         if (!products.length) return;
 
         const firstProduct = products[0];
-        if (!firstProduct?.id) return;
-        const img = await getProductImage(firstProduct.id);
-
-        if (img?.url) {
-          setImageUrl(img.url);
+        
+        if (firstProduct?.imgUrl) {
+          setImageUrl(firstProduct.imgUrl);
         }
       } catch (err) {
         console.error("Error loading category image", err);

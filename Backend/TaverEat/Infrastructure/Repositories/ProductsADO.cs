@@ -118,6 +118,42 @@ static class ProductADO
         return results;
     }
 
+    public static List<(Product product, string? imgUrl)> SearchProductsWithImages(TaverDBConnection dbConn, string query)
+    {
+        dbConn.Open();
+
+        string sql = @"
+            SELECT p.Id, p.Nom, p.Descripcio, p.Preu, p.Categoria_nom, 
+                   (SELECT TOP 1 i.Url FROM img_url i WHERE i.Producte_id = p.Id) as Url
+            FROM producte p
+            WHERE p.Nom LIKE @query OR p.Descripcio LIKE @query";
+
+        using SqlCommand cmd = new SqlCommand(sql, dbConn.sqlConnection);
+        cmd.Parameters.AddWithValue("@query", "%" + query + "%");
+
+        using SqlDataReader reader = cmd.ExecuteReader();
+
+        List<(Product, string?)> results = new();
+
+        while (reader.Read())
+        {
+            var product = new Product
+            {
+                Id = reader.IsDBNull(0) ? Guid.Empty : reader.GetGuid(0),
+                Nom = reader.GetString(1),
+                Descripcio = reader.GetString(2),
+                Preu = reader.GetDecimal(3),
+                Categoria_nom = reader.GetString(4)
+            };
+            string? imgUrl = reader.IsDBNull(5) ? null : reader.GetString(5);
+            
+            results.Add((product, imgUrl));
+        }
+
+        dbConn.Close();
+        return results;
+    }
+
     public static void Update(TaverDBConnection dbConn, Product product)
     {
         dbConn.Open();

@@ -8,6 +8,7 @@ import { getCategories, Category } from "../Services/categoryAPI";
 
 export default function Home() {
   const [categories, setCategories] = useState<Category[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -67,6 +68,8 @@ export default function Home() {
               type="text"
               placeholder="Què vols menjar?"
               className="bg-transparent outline-none flex-1"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
         </div>
@@ -112,7 +115,9 @@ export default function Home() {
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
 
-              {categories.map((category) => (
+              {categories
+                .filter(category => category.nom.toLowerCase().includes(searchQuery.toLowerCase()))
+                .map((category) => (
                 <Link
                   key={category.nom}
                   href={`/categories/${encodeURIComponent(category.nom)}`}
