@@ -5,12 +5,41 @@ import Link from "next/link";
 import CategoryCard from "../components/CategoryCard";
 import { Search, MapPin, AlertCircle, Menu, User } from "lucide-react";
 import { getCategories, Category } from "../Services/categoryAPI";
+import { searchProducts, Product } from "../Services/productAPI";
+import ProductCard from "../components/ProductCard";
 
 export default function Home() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<Product[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setSearchResults([]);
+      setIsSearching(false);
+      return;
+    }
+
+    const delayDebounceFn = setTimeout(() => {
+      const fetchSearch = async () => {
+        setIsSearching(true);
+        try {
+          const results = await searchProducts(searchQuery);
+          setSearchResults(results);
+        } catch (err) {
+          console.error(err);
+        } finally {
+          setIsSearching(false);
+        }
+      };
+      fetchSearch();
+    }, 400);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchQuery]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -106,8 +135,33 @@ export default function Home() {
           </div>
         )}
 
+        {/* PRODUCTS RESULTS */}
+        {!isLoading && !error && searchQuery.trim() !== "" && (
+          <>
+            <h2 className="text-xl font-extrabold mb-4">
+              Resultats de Búsqueda
+            </h2>
+
+            {isSearching ? (
+              <div className="flex justify-center mt-10">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-sky-500"></div>
+              </div>
+            ) : searchResults.length > 0 ? (
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {searchResults.map((product) => (
+                  <ProductCard key={product.id || product.nom} p={product} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center mt-10 text-slate-500">
+                No s'han trobat resultats.
+              </div>
+            )}
+          </>
+        )}
+
         {/* CATEGORIES */}
-        {!isLoading && !error && (
+        {!isLoading && !error && searchQuery.trim() === "" && (
           <>
             <h2 className="text-xl font-extrabold mb-4">
               Explorar Categorías
@@ -115,9 +169,7 @@ export default function Home() {
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
 
-              {categories
-                .filter(category => category.nom.toLowerCase().includes(searchQuery.toLowerCase()))
-                .map((category) => (
+              {categories.map((category) => (
                 <Link
                   key={category.nom}
                   href={`/categories/${encodeURIComponent(category.nom)}`}

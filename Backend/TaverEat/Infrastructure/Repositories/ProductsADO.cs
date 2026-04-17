@@ -87,10 +87,10 @@ static class ProductADO
         dbConn.Open();
 
         string sql = @"
-            SELECT p.Id, p.Nom, p.Descripcio, p.Preu, p.Categoria_nom, i.Url
-            FROM producte p
-            LEFT JOIN img_url i ON p.Id = i.Producte_id
-            WHERE p.Categoria_nom = @Categoria_nom";
+            SELECT product.Id, product.Nom, product.Descripcio, product.Preu, product.Categoria_nom, img.Url
+            FROM producte product
+            LEFT JOIN img_url img ON product.Id = img.Producte_id
+            WHERE product.Categoria_nom = @Categoria_nom";
 
         using SqlCommand cmd = new SqlCommand(sql, dbConn.sqlConnection);
         cmd.Parameters.AddWithValue("@Categoria_nom", Categoria_nom);
@@ -123,10 +123,10 @@ static class ProductADO
         dbConn.Open();
 
         string sql = @"
-            SELECT p.Id, p.Nom, p.Descripcio, p.Preu, p.Categoria_nom, 
-                   (SELECT TOP 1 i.Url FROM img_url i WHERE i.Producte_id = p.Id) as Url
-            FROM producte p
-            WHERE p.Nom LIKE @query OR p.Descripcio LIKE @query";
+            SELECT prodcut.Id, product.Nom, product.Descripcio, product.Preu, product.Categoria_nom, 
+                   (SELECT TOP 1 img.Url FROM img_url img WHERE img.Producte_id = product.Id) as Url
+            FROM producte product
+            WHERE product.Nom LIKE @query OR product.Descripcio LIKE @query";
 
         using SqlCommand cmd = new SqlCommand(sql, dbConn.sqlConnection);
         cmd.Parameters.AddWithValue("@query", "%" + query + "%");
