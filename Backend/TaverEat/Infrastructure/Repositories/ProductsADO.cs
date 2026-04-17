@@ -87,9 +87,9 @@ static class ProductADO
         dbConn.Open();
 
         string sql = @"
-            SELECT product.Id, product.Nom, product.Descripcio, product.Preu, product.Categoria_nom, img.Url
+            SELECT product.Id, product.Nom, product.Descripcio, product.Preu, product.Categoria_nom, 
+                   (SELECT TOP 1 img.Url FROM img_url img WHERE img.Producte_id = product.Id) as Url
             FROM producte product
-            LEFT JOIN img_url img ON product.Id = img.Producte_id
             WHERE product.Categoria_nom = @Categoria_nom";
 
         using SqlCommand cmd = new SqlCommand(sql, dbConn.sqlConnection);
@@ -123,7 +123,7 @@ static class ProductADO
         dbConn.Open();
 
         string sql = @"
-            SELECT prodcut.Id, product.Nom, product.Descripcio, product.Preu, product.Categoria_nom, 
+            SELECT product.Id, product.Nom, product.Descripcio, product.Preu, product.Categoria_nom, 
                    (SELECT TOP 1 img.Url FROM img_url img WHERE img.Producte_id = product.Id) as Url
             FROM producte product
             WHERE product.Nom LIKE @query OR product.Descripcio LIKE @query";
