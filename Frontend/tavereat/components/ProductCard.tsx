@@ -17,8 +17,8 @@ export default function ProductCard({ p }: { p: Product }) {
             className="object-cover group-hover:scale-110 transition-transform duration-300"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-slate-400 text-sm">
-            {imageUrl} {p.id}
+          <div className="w-full h-full flex items-center justify-center bg-slate-200 text-slate-400 text-xs font-semibold text-center px-2">
+            Sense<br/>Imatge
           </div>
         )}
       </div>
