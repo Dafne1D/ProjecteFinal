@@ -1,11 +1,10 @@
 import Image from "next/image";
 import { Product } from "../Services/productAPI";
-
 export default function ProductCard({ p }: { p: Product }) {
   const imageUrl = p.imgUrl || "";
 
   return (
-    <div className="group bg-white rounded-2xl border border-slate-100 shadow-sm p-3 hover:shadow-md transition flex items-center space-x-4">
+    <div className="group relative bg-white rounded-2xl border border-slate-100 shadow-sm p-3 hover:shadow-md transition flex items-center space-x-4">
       {/* IMAGE */}
       <div className="relative w-24 h-24 bg-slate-100 rounded-xl overflow-hidden shrink-0">
         {imageUrl ? (
@@ -18,7 +17,7 @@ export default function ProductCard({ p }: { p: Product }) {
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-slate-200 text-slate-400 text-xs font-semibold text-center px-2">
-            Sense<br/>Imatge
+            Sense<br />Imatge
           </div>
         )}
       </div>
@@ -36,11 +35,15 @@ export default function ProductCard({ p }: { p: Product }) {
           <span className="text-sky-500 font-bold text-lg">
             {p.preu} €
           </span>
-          <button className="px-4 py-1.5 bg-sky-500 hover:bg-sky-600 text-white text-sm rounded-full transition">
-            Afegir
-          </button>
         </div>
       </div>
+
+      {/* ADD BUTTON (BOTTOM RIGHT) */}
+      <button
+        className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-sky-500 hover:bg-sky-600 text-black flex items-center justify-center shadow-md transition"
+      >
+        +
+      </button>
     </div>
   );
 }

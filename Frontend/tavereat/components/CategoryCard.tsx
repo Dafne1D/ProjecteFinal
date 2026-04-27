@@ -2,26 +2,30 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import { getProductsByCategory, Product } from "../Services/productAPI";
 
-import { getProductsByCategory } from "../Services/productAPI";
-
-interface CategoryCardProps {
-  title: string;
+export interface Category {
+  nom: string;
 }
 
-export default function CategoryCard({ title }: CategoryCardProps) {
+interface CategoryCardProps {
+  category: Category;
+}
+
+export default function CategoryCard({ category }: CategoryCardProps) {
   const [imageUrl, setImageUrl] = useState<string>("");
 
   useEffect(() => {
     const loadImage = async () => {
       try {
-        const products = await getProductsByCategory(title);
+        const products: Product[] = await getProductsByCategory(category.nom);
 
         if (!products.length) return;
 
         const firstProduct = products[0];
-        
+
         if (firstProduct?.imgUrl) {
           setImageUrl(firstProduct.imgUrl);
         }
@@ -31,25 +35,27 @@ export default function CategoryCard({ title }: CategoryCardProps) {
     };
 
     loadImage();
-  }, [title]);
+  }, [category.nom]);
 
   return (
-    <div className="group bg-white rounded-2xl shadow-sm border border-gray-100 p-3 flex items-center space-x-4 transition-all hover:shadow-md hover:-translate-y-1 cursor-pointer active:scale-95">
-
+    <Link
+      href={`/categories/${encodeURIComponent(category.nom)}`}
+      className="group bg-white rounded-2xl shadow-sm border border-gray-100 p-3 flex items-center space-x-4 transition-all hover:shadow-md hover:-translate-y-1 active:scale-95"
+    >
       {/* IMAGE */}
       <div className="relative w-20 h-20 bg-sky-50 rounded-xl overflow-hidden shrink-0 border border-sky-100">
 
         {imageUrl ? (
           <Image
             src={imageUrl}
-            alt={title}
+            alt={category.nom}
             fill
             unoptimized
             className="object-cover"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-slate-400 text-sm">
-            {imageUrl}
+          <div className="w-full h-full flex items-center justify-center text-slate-400 text-xs">
+            Sense imatge
           </div>
         )}
 
@@ -58,7 +64,7 @@ export default function CategoryCard({ title }: CategoryCardProps) {
       {/* CONTENT */}
       <div className="flex-1 min-w-0">
         <h3 className="text-lg font-bold text-gray-800 truncate group-hover:text-sky-600 transition-colors">
-          {title}
+          {category.nom}
         </h3>
       </div>
 
@@ -67,6 +73,6 @@ export default function CategoryCard({ title }: CategoryCardProps) {
         <ChevronRight className="w-5 h-5" />
       </div>
 
-    </div>
+    </Link>
   );
 }
