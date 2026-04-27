@@ -161,7 +161,7 @@ export default function Home() {
               </div>
             ) : (
               <div className="text-center mt-10 text-slate-500">
-                No s'han trobat resultats.
+                No s&apos;han trobat resultats.
               </div>
             )}
           </>
