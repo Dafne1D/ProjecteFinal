@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import CategoryCard from "../components/CategoryCard";
 import { Search, MapPin, AlertCircle, Menu, User } from "lucide-react";
 import { getCategories, Category } from "../Services/categoryAPI";
@@ -110,11 +109,16 @@ export default function Home() {
         {/* LOADING */}
         {isLoading && (
           <div className="space-y-4">
-            <h2 className="text-xl font-extrabold">Carregant categories...</h2>
+            <h2 className="text-xl font-extrabold">
+              Carregant categories...
+            </h2>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[1, 2, 3, 4, 5, 6].map(i => (
-                <div key={i} className="h-24 bg-slate-200 animate-pulse rounded-xl" />
+                <div
+                  key={i}
+                  className="h-24 bg-slate-200 animate-pulse rounded-xl"
+                />
               ))}
             </div>
           </div>
@@ -135,7 +139,7 @@ export default function Home() {
           </div>
         )}
 
-        {/* PRODUCTS RESULTS */}
+        {/* SEARCH RESULTS */}
         {!isLoading && !error && searchQuery.trim() !== "" && (
           <>
             <h2 className="text-xl font-extrabold mb-4">
@@ -149,7 +153,10 @@ export default function Home() {
             ) : searchResults.length > 0 ? (
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {searchResults.map((product) => (
-                  <ProductCard key={product.id || product.nom} p={product} />
+                  <ProductCard
+                    key={product.id || product.nom}
+                    p={product}
+                  />
                 ))}
               </div>
             ) : (
@@ -170,14 +177,12 @@ export default function Home() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
 
               {categories.map((category) => (
-                <Link
+                <CategoryCard
                   key={category.nom}
-                  href={`/categories/${encodeURIComponent(category.nom)}`}
-                  className="focus-visible:ring-2 focus-visible:ring-sky-500 rounded-2xl outline-none active:scale-95 transition-transform"
-                >
-                  <CategoryCard title={category.nom} />
-                </Link>
+                  category={category}
+                />
               ))}
+
             </div>
           </>
         )}
