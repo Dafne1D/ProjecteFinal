@@ -1,8 +1,9 @@
-using TaverEat.Repository;
+using Infrastructure.Repositories;
 using API.Services;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using Infrastructure.Interfaces;
 
 namespace Application.Endpoints;
 
@@ -10,21 +11,10 @@ public static class CategoriaEndpoints
 {
     public static void MapCategoriaEndpoints(this WebApplication app)
     {
-        // GET categories
-        app.MapGet("/categories", (TaverDBConnection dbConn) =>
+        app.MapGet("/categories", (ICategoryRepository repo) =>
         {
-            // Abrir la conexión
-            if (!dbConn.Open())
-                return Results.Problem("No s'ha pogut connectar amb la base de dades");
-            try
-            {
-                var categorias = CategoriaADO.GetAll(dbConn);
-                return Results.Ok(categorias);
-            }
-            finally
-            {
-                dbConn.Close();
-            }
+            var categories = repo.GetAll();
+            return Results.Ok(categories);
         });
-    }  
+    }
 }
