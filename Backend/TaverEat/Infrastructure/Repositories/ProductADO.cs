@@ -24,6 +24,40 @@ static class ProductADO
         dbConn.Close();
     }
 
+        public static void Update(TaverDBConnection dbConn, Product product)
+    {
+        dbConn.Open();
+
+        string sql = @"UPDATE producte SET
+                       Descripcio = @Descripcio,
+                       Preu = @Preu,
+                       Categoria_nom = @Categoria_nom
+                       WHERE Nom = @Nom";
+
+        using SqlCommand cmd = new SqlCommand(sql, dbConn.sqlConnection);
+        cmd.Parameters.AddWithValue("@Nom", product.Nom);
+        cmd.Parameters.AddWithValue("@Descripcio", product.Descripcio);
+        cmd.Parameters.AddWithValue("@Preu", product.Preu);
+        cmd.Parameters.AddWithValue("@Categoria_nom", product.Categoria_nom);
+          cmd.ExecuteNonQuery();
+        dbConn.Close();
+    }
+
+    public static bool Delete(TaverDBConnection dbConn, string nom)
+    {
+        dbConn.Open();
+
+        string sql = @"DELETE FROM producte WHERE Nom = @Nom";
+
+        using SqlCommand cmd = new SqlCommand(sql, dbConn.sqlConnection);
+        cmd.Parameters.AddWithValue("@Nom", nom);
+
+        int rows = cmd.ExecuteNonQuery();
+
+        dbConn.Close();
+        return rows > 0;
+    }
+
     public static List<Product> GetAll(TaverDBConnection dbConn)
     {
         List<Product> products = new();
@@ -152,39 +186,5 @@ static class ProductADO
 
         dbConn.Close();
         return results;
-    }
-
-    public static void Update(TaverDBConnection dbConn, Product product)
-    {
-        dbConn.Open();
-
-        string sql = @"UPDATE producte SET
-                       Descripcio = @Descripcio,
-                       Preu = @Preu,
-                       Categoria_nom = @Categoria_nom
-                       WHERE Nom = @Nom";
-
-        using SqlCommand cmd = new SqlCommand(sql, dbConn.sqlConnection);
-        cmd.Parameters.AddWithValue("@Nom", product.Nom);
-        cmd.Parameters.AddWithValue("@Descripcio", product.Descripcio);
-        cmd.Parameters.AddWithValue("@Preu", product.Preu);
-        cmd.Parameters.AddWithValue("@Categoria_nom", product.Categoria_nom);
-          cmd.ExecuteNonQuery();
-        dbConn.Close();
-    }
-
-    public static bool Delete(TaverDBConnection dbConn, string nom)
-    {
-        dbConn.Open();
-
-        string sql = @"DELETE FROM producte WHERE Nom = @Nom";
-
-        using SqlCommand cmd = new SqlCommand(sql, dbConn.sqlConnection);
-        cmd.Parameters.AddWithValue("@Nom", nom);
-
-        int rows = cmd.ExecuteNonQuery();
-
-        dbConn.Close();
-        return rows > 0;
     }
 }
