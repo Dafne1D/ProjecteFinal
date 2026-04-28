@@ -4,9 +4,11 @@ namespace Infrastructure.Interfaces;
 
 public interface IProductRepository
 {
-    IEnumerable<Product> GetAll();
-    Product? GetById(Guid id);
-    IEnumerable<Product> GetByCategory(string categoryNom);
-    IEnumerable<(Product product, string? imgUrl)> SearchWithImages(string query);
-    IEnumerable<(Product product, string? imgUrl)> GetWithImagesByCategory(string categoryNom);
+    List<Product> GetAll();
+    List<Product> GetByCategoriaNom(string categoryNom);
+    List<(Product product, string? imgUrl)> SearchProductWithImages(string query);
+    List<(Product product, string? imgUrl)> GetProductsWithImagesByCategoriaNom(string categoryNom);
+    void Insert(Product product);
+    void Update(Product product);
+    bool Delete(string nom);
 }
