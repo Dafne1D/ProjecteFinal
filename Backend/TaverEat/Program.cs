@@ -1,5 +1,7 @@
 using API.Services;
 using Application.Endpoints;
+using Infrastructure.Repositories;
+using Infrastructure.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Serveis
 // -----------------------------
 builder.Services.AddScoped<TaverDBConnection>();
+
+builder.Services.AddScoped<ICategoryRepository, CategoryADO>();
 
 builder.Services.AddCors(options =>
 {
