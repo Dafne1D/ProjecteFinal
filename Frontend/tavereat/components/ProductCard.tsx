@@ -38,11 +38,15 @@ export default function ProductCard({ p }: { p: Product }) {
         </div>
       </div>
 
-      {/* ADD BUTTON (BOTTOM RIGHT) */}
-      <button
-        className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-sky-500 hover:bg-sky-600 text-black flex items-center justify-center shadow-md transition"
-      >
-        +
+      {/* ADD BUTTON */}
+      <button className="absolute bottom-3 right-3 w-12 h-12 rounded-full bg-sky-500 hover:bg-sky-600 active:scale-95 transition flex items-center justify-center shadow-lg border-2 border-white">
+        <Image
+          src="/imgs/mas.png"
+          alt="add"
+          width={30}
+          height={30}
+          className="object-contain"
+        />
       </button>
     </div>
   );
