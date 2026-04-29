@@ -1,3 +1,4 @@
+namespace Infrastructure.InfraEntites;
 public class ProductEntity
 {
     public Guid Id { get; set; }
