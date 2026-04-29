@@ -3,7 +3,9 @@ using API.Services;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using Infrastructure.Interfaces;
 using Infrastructure.Repositories;
+using Infrastructure.DTO;
 
 namespace Application.Endpoints;
 public static class ProductEndpoint
@@ -11,59 +13,23 @@ public static class ProductEndpoint
     public static void MapProductEndpoints(this WebApplication app)
     {
         // GET productsBycategoia_nom
-        app.MapGet("/products/category/{categoia_nom}", (string categoia_nom, TaverDBConnection dbConn) =>
-        {
-            if (!dbConn.Open())
-                return Results.Problem("No s'ha pogut connectar amb la base de dades");
-            try
-            {
-                var products = ProductADO.(dbConn, categoia_nom);
-                return Results.Ok(products);
-            }
-            finally
-            {
-                dbConn.Close();
-            }
-        });   
+            app.MapGet("/products/category/{categoria_nom}", (string categoria_nom,[FromServices] IProductRepository repo) =>
+                Results.Ok(repo.GetByCategoriaNom(categoria_nom)));
 
         // GET imgs for the products
-        app.MapGet("/products/category/{categoria_nom}/full", (string categoria_nom, TaverDBConnection dbConn) =>
+        app.MapGet("/products/category/{categoria_nom}/full", (string categoria_nom,[FromServices] IProductRepository repo) =>
         {
-            if (!dbConn.Open())
-                return Results.Problem("No s'ha pogut connectar amb la base de dades");
-            try
-            {
-                var productsAndImages = ProductADO.GetProductsWithImagesByCategoriaNom(dbConn, categoria_nom);
-                var productResponses = productsAndImages.Select(p => 
-                    TaverEat.Infrastructure.DTO.ProductResponse.FromProduct(p.product, p.imgUrl)
-                ).ToList();
-
-                return Results.Ok(productResponses);
-            }
-            finally
-            {
-                dbConn.Close();
-            }
+            var results = repo.GetProductsWithImagesByCategoriaNom(categoria_nom);
+            var response = results.Select(p => ProductResponse.FromProduct(p.product, p.imgUrl));
+            return Results.Ok(response);
         });
 
         // GET products search
-        app.MapGet("/products/search", (string q, TaverDBConnection dbConn) =>
+        app.MapGet("/products/search", (string q,[FromServices] IProductRepository repo) =>
         {
-            if (!dbConn.Open())
-                return Results.Problem("No s'ha pogut connectar amb la base de dades");
-            try
-            {
-                var productsAndImages = ProductADO.SearchProductsWithImages(dbConn, q);
-                var productResponses = productsAndImages.Select(p => 
-                    TaverEat.Infrastructure.DTO.ProductResponse.FromProduct(p.product, p.imgUrl)
-                ).ToList();
-
-                return Results.Ok(productResponses);
-            }
-            finally
-            {
-                dbConn.Close();
-            }
+            var results = repo.SearchProductsWithImages(q);
+            var response = results.Select(p => ProductResponse.FromProduct(p.product, p.imgUrl));
+            return Results.Ok(response);
         });
     }  
 }

@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<TaverDBConnection>();
 
 builder.Services.AddScoped<ICategoryRepository, CategoryADO>();
+builder.Services.AddScoped<IProductRepository, ProductADO>();
 
 builder.Services.AddCors(options =>
 {

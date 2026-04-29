@@ -11,7 +11,7 @@ public static class CategoriaEndpoints
 {
     public static void MapCategoriaEndpoints(this WebApplication app)
     {
-        app.MapGet("/categories", (ICategoryRepository repo) =>
+        app.MapGet("/categories", ([FromServices] ICategoryRepository repo) =>
         {
             var categories = repo.GetAll();
             return Results.Ok(categories);

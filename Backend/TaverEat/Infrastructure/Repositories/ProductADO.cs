@@ -1,6 +1,7 @@
 using Microsoft.Data.SqlClient;
 using Domain.Entities;
 using Infrastructure.Interfaces;
+using Infrastructure.InfraEntites;
 using API.Services;
 using Infrastructure.Mappers;
 

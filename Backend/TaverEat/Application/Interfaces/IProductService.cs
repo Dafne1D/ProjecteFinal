@@ -1,4 +1,4 @@
-using TaverEat.Infrastructure.DTO;
+using Infrastructure.DTO;
 
 namespace Application.Interfaces;
 

@@ -1,6 +1,6 @@
 using Domain.Entities;
 
-namespace TaverEat.Infrastructure.DTO;
+namespace Infrastructure.DTO;
 
 public record ProductResponse(Guid Id, string Nom, string Descripcio, decimal Preu, string? ImgUrl) 
 {
