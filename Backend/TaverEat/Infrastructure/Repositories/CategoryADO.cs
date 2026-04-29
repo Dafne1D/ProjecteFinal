@@ -1,8 +1,9 @@
-// Infrastructure/Repositories/CategoriaRepository.cs
 using Microsoft.Data.SqlClient;
 using Domain.Entities;
 using Infrastructure.Interfaces;
 using API.Services;
+using Infrastructure.InfraEntites;
+using Infrastructure.Mappers;
 
 namespace Infrastructure.Repositories;
 
@@ -25,7 +26,10 @@ public class CategoryADO : ICategoryRepository
         using SqlDataReader reader = cmd.ExecuteReader();
 
         while (reader.Read())
-            categories.Add(new Categoria { Nom = reader.GetString(0) });
+        {
+            var entity = new CategoriaEntity {Nom = reader.GetString(0)};
+            categories.Add(CategoriaMapper.ToDomain(entity));
+        }
 
         _dbConn.Close();
         return categories;
@@ -36,13 +40,16 @@ public class CategoryADO : ICategoryRepository
         _dbConn.Open();
         string sql = "SELECT Nom FROM Categoria WHERE Nom = @Nom";
 
-        using SqlCommand cmd = new SqlCommand(sql, _dbConn.sqlConnection);
+        using SqlCommand cmd = new(sql, _dbConn.sqlConnection);
         cmd.Parameters.AddWithValue("@Nom", nom);
         using SqlDataReader reader = cmd.ExecuteReader();
 
         Categoria? categoria = null;
         if (reader.Read())
-            categoria = new Categoria { Nom = reader.GetString(0) };
+        {
+            var entity = new CategoriaEntity { Nom = reader.GetString(0) };
+            categoria = CategoriaMapper.ToDomain(entity);
+        }
 
         _dbConn.Close();
         return categoria;
@@ -58,12 +65,6 @@ public class CategoryADO : ICategoryRepository
         cmd.ExecuteNonQuery();
 
         _dbConn.Close();
-    }
-
-    public void Update(Categoria categoria)
-    {
-        // Implementa quan tinguis camps a actualitzar
-        throw new NotImplementedException();
     }
 
     public bool Delete(string nom)
