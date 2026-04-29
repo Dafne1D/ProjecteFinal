@@ -1,5 +1,5 @@
 using Domain.Entities;
-using Infrastructure.Entities;
+using Infrastructure.InfraEntites;
 
 namespace Infrastructure.Mappers;
 
@@ -7,13 +7,13 @@ public static class ProductMapper
 {
     public static Product ToDomain(ProductEntity entity)
         => new Product
-        {
-            Id = entity.Id,
-            Nom = entity.Nom,
-            Descripcio = entity.Descripcio,
-            Preu = entity.Preu,
-            Categoria_nom = entity.CategoryNom
-        };
+        (
+            entity.Id,
+            entity.Nom,
+            entity.Descripcio,
+            entity.Preu,
+            entity.CategoryNom
+        );
 
     public static ProductEntity ToEntity(Product product)
         => new ProductEntity
