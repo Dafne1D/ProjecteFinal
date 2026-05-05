@@ -8,5 +8,5 @@ public interface IComandaVendaRepository
     ComandaVenda? GetComandaActivaByClient(Guid clientId);
     ComandaVenda CreateComandaVenda(Guid clientId);
 
-    ComandaVendaLinea? GetLinea(Guid comandaId)
+    ComandaVendaLinea? GetLinea(Guid comandaId);
 }

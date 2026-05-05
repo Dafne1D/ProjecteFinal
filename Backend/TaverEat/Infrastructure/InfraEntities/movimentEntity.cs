@@ -1,4 +1,4 @@
-namespace Infrastructure.InfraEntites;
+namespace Infrastructure.Entities;
 public class MovimentEntity
 {
     public Guid Id { get; set; }
