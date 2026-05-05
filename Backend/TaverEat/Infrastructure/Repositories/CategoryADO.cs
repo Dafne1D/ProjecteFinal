@@ -2,7 +2,7 @@ using Microsoft.Data.SqlClient;
 using Domain.Entities;
 using Infrastructure.Interfaces;
 using API.Services;
-using Infrastructure.InfraEntites;
+using Infrastructure.Entities;
 using Infrastructure.Mappers;
 
 namespace Infrastructure.Repositories;
