@@ -12,6 +12,7 @@ builder.Services.AddScoped<TaverDBConnection>();
 
 builder.Services.AddScoped<ICategoryRepository, CategoryADO>();
 builder.Services.AddScoped<IProductRepository, ProductADO>();
+builder.Services.AddScoped<IComandaVendaRepository, ComandaVendaRepository>();
 
 builder.Services.AddCors(options =>
 {
@@ -33,4 +34,5 @@ app.UseCors("AllowFrontend");
 app.MapCategoriaEndpoints();
 app.MapProductEndpoints();
 app.MapImgUrlEndpoints();
+app.MapComandaVendaEndpoints();
 app.Run();
