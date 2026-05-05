@@ -6,7 +6,7 @@ public interface IComandaVendaRepository
 {
     // Buscar si hi ha una comanda activa
     ComandaVenda? GetComandaActivaByClient(Guid clientId);
-    ComandaVenda CreateComandaVenda(Guid clientId);
+    ComandaVenda CreateComanda(Guid clientId);
 
-    ComandaVendaLinea? GetLinea(Guid comandaId);
+    ComandaVendaLinea? GetLinea(Guid comandaId, Guid ProducteId);
 }
