@@ -23,6 +23,7 @@ export default function CategoryPage() {
         setLoading(true);
         const data = await getProductsByCategory(name);
         setProducts(data);
+        console.log(data);
       } catch (err) {
         console.error("Error loading products", err);
       } finally {

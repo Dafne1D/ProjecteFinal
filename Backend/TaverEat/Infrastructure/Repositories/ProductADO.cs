@@ -64,7 +64,7 @@ public class ProductADO : IProductRepository
 
         List<(Product, string?)> results = new();
         while (reader.Read())
-            results.Add((MapProduct(reader),  reader["Url"] as string));
+            results.Add((MapProduct(reader), reader["Url"]?.ToString()?.Trim()));
 
         _dbConn.Close();
         return results;
@@ -85,7 +85,7 @@ public class ProductADO : IProductRepository
 
         List<(Product, string?)> results = new();
         while (reader.Read())
-            results.Add((MapProduct(reader),  reader["Url"] as string));
+            results.Add((MapProduct(reader), reader["Url"]?.ToString()?.Trim()));
 
         _dbConn.Close();
         return results;

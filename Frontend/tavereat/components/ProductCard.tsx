@@ -1,19 +1,17 @@
 import Image from "next/image";
 import { Product } from "../Services/productAPI";
 export default function ProductCard({ p }: { p: Product }) {
-  const imageUrl = p.imgUrl || "";
+  const imageUrl = p.imgUrl?.trim() || "";
 
   return (
     <div className="group relative bg-white rounded-2xl border border-slate-100 shadow-sm p-3 hover:shadow-md transition flex items-center space-x-4">
       {/* IMAGE */}
       <div className="relative w-24 h-24 bg-slate-100 rounded-xl overflow-hidden shrink-0">
         {imageUrl ? (
-          <Image
+          <img
             src={imageUrl}
             alt={p.nom}
-            fill
-            unoptimized
-            className="object-cover group-hover:scale-110 transition-transform duration-300"
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-slate-200 text-slate-400 text-xs font-semibold text-center px-2">
