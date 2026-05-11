@@ -4,6 +4,8 @@ using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using Infrastructure.Interfaces;
+using Infrastructure.DTO;
+using TaverEat.Repository;
 
 namespace Application.Endpoints;
 
@@ -31,14 +33,22 @@ public static class ClietnEndpoint
             return Results.Ok(ClientResponse.FromClient(client));
         });
 
-        app.MapPut("/clients/{id}", (Guid id, [FromBody] ClientRequest request, [FromService] IClientRespository repo) =>
+        app.MapPut("/clients/{id}", (Guid id, [FromBody] ClientRequest request, [FromServices] IClientRepository repo) =>
         {
             var existeix = repo.GetById(id);
             if (existeix is null) return Results.NotFound();
 
-            var updated = new Client(id, request.Nom, request.Direccio, request.Contrasenya);
-            repo.updated();
-            return Results.Ok(ClietnResponse.FromClient(updated));
+            var updated = new Client(
+                id,
+                request.Nom,
+                request.Email,
+                request.Direccio,
+                request.Contrasenya
+            );
+
+            repo.Update(updated);
+
+            return Results.Ok(ClientResponse.FromClient(updated));
         });
 
         app.MapDelete("/clients/{id}", (Guid id, [FromServices] IClientRepository repo) =>

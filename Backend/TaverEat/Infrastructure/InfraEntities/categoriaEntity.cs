@@ -2,5 +2,5 @@ namespace Infrastructure.Entities;
 
 public class CategoriaEntity
 {
-    public string Nom { get; set; }
+    public required string Nom { get; set; }
 }

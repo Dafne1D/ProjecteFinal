@@ -1,6 +1,9 @@
-using System.Net;
+using System.Text;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
+using Microsoft.IdentityModel.Tokens;
+
+namespace API.Services;
 
 public class JwtService
 {
@@ -9,7 +12,7 @@ public class JwtService
     public JwtService(IConfiguration configuration)
     {
         _configuration = configuration;
-    } 
+    }
 
     public string GenerateToken(string email)
     {
@@ -17,24 +20,26 @@ public class JwtService
         {
             new Claim(ClaimTypes.Email, email)
         };
-    
+
         var key = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(
-                _configuration["Jwt:JstSecretKey"]!
+                _configuration["Jwt:JwtSecretKey"]!
             )
         );
 
-        var credentials = new SinginCredentials(
+        var credentials = new SigningCredentials(
             key,
             SecurityAlgorithms.HmacSha256
         );
 
         var token = new JwtSecurityToken(
+            issuer: _configuration["Jwt:Issuer"],
+            audience: _configuration["Jwt:Audience"],
             claims: claims,
             expires: DateTime.UtcNow.AddDays(7),
-            singinCredentials: credentials
+            signingCredentials: credentials
         );
 
         return new JwtSecurityTokenHandler().WriteToken(token);
-    }    
+    }
 }

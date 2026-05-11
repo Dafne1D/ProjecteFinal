@@ -52,6 +52,25 @@ public class ClientADO : IClientRepository
         return client;
     }
 
+    
+    public Client GetByEmail(string email)
+    {
+        _dbConn.Open();
+        string sql = "SELECT id, nom, email, direccio, contrasenya FROM client WHERE email = @email";
+
+        using SqlCommand cmd = new(sql, _dbConn.sqlConnection);
+        cmd.Parameters.AddWithValue("@email", email);
+        using SqlDataReader reader = cmd.ExecuteReader();
+
+        Client? client = null;
+        if(reader.Read())
+            client = ClientMapper.ToDomain(ReadEntity(reader));
+
+        _dbConn.Close();
+        if (client == null) throw new Exception("Client not found");
+        return client;
+    }
+
     public void Insert(Client client)
     {
         _dbConn.Open();
