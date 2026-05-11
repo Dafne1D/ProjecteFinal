@@ -16,5 +16,35 @@ public static class ClietnEndpoint
             var categories = repo.GetAll();
             return Results.Ok(categories);
         });
+
+        app.MapGet("/client/{id}", (Guid id, [FromServices] IClientRepository repo) =>
+        {
+            var client = repo.GetById(id);
+            if(client is null) return Results.NotFound();
+            return Results.Ok(ClientResponse.FromClient(client));
+        });
+
+        app.MapPost("/clients", ([FromBody] ClientRequest request, [FromServices] IClientRepository repo) =>
+        {
+            var client = request.ToClient();
+            repo.Insert(client);
+            return Results.Ok(ClientResponse.FromClient(client));
+        });
+
+        app.MapPut("/clients/{id}", (Guid id, [FromBody] ClientRequest request, [FromService] IClientRespository repo) =>
+        {
+            var existeix = repo.GetById(id);
+            if (existeix is null) return Results.NotFound();
+
+            var updated = new Client(id, request.Nom, request.Direccio, request.Contrasenya);
+            repo.updated();
+            return Results.Ok(ClietnResponse.FromClient(updated));
+        });
+
+        app.MapDelete("/clients/{id}", (Guid id, [FromServices] IClientRepository repo) =>
+        {
+           var deleted = repo.Delete(id);
+           return deleted ? Results.Ok() : Results.NotFound(); 
+        });
     }
 }
