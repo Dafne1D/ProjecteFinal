@@ -121,13 +121,13 @@ public class ClientADO : IClientRepository
         return rows > 0;
     }
 
-        private static ClientEntity ReadEntity(SqlDataReader r) => new ClientEntity
+    private static ClientEntity ReadEntity(SqlDataReader r) => new ClientEntity
     {
         Id = r.GetGuid(0),
         Nom = r.GetString(1),
         Email = r.GetString(2),
-        Direccio = r.GetString(4),
-        Contrasenya = r.GetString(5)
+        Direccio = r.GetString(3),
+        Contrasenya = r.GetString(4)
     };
 
 }

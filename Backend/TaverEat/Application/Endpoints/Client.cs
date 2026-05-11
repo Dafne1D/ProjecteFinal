@@ -13,7 +13,7 @@ public static class ClietnEndpoint
 {
     public static void MapClientEndpoints(this WebApplication app)
     {
-        app.MapGet("/client", ([FromServices] IClientRepository repo) =>
+        app.MapGet("/clients", ([FromServices] IClientRepository repo) =>
         {
             var categories = repo.GetAll();
             return Results.Ok(categories);

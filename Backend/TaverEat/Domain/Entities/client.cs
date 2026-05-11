@@ -1,12 +1,11 @@
 namespace Domain.Entities;
-
 public class Client
 {
-    public Guid Id { get; set; }
-    public string Nom { get; set; } = "";
-    public string Email { get; set; } = "";
-    public string Direccio { get; set; } = "";
-    public string Contrasenya { get; set; } = "";
+    public Guid Id { get; }
+    public string Nom { get; }
+    public string Email { get; }
+    public string Direccio { get; }
+    public string Contrasenya { get; }
 
     public Client(Guid id, string nom, string email, string direccio, string contrasenya)
     {
