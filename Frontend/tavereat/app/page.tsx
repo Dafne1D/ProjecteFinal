@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import CategoryCard from "../components/CategoryCard";
 import { Search, MapPin, AlertCircle, Menu, User } from "lucide-react";
+import Link from "next/link";
 import { getCategories, Category } from "../Services/categoryAPI";
 import { searchProducts, Product } from "../Services/productAPI";
 import ProductCard from "../components/ProductCard";
@@ -83,9 +84,9 @@ export default function Home() {
             </div>
           </div>
 
-          <button className="p-2 -mr-2 rounded-full bg-slate-100 hover:bg-slate-200">
-            <User className="w-5 h-5" />
-          </button>
+          <Link href="/login" className="p-2 -mr-2 rounded-full bg-orange-100 hover:bg-orange-200 transition-colors">
+            <User className="w-5 h-5 text-orange-500" />
+          </Link>
         </div>
 
         {/* SEARCH */}
