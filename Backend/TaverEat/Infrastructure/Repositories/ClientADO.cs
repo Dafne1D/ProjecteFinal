@@ -22,7 +22,7 @@ public class ClientADO : IClientRepository
         List<Client> clients = new();
         _dbConn.Open();
 
-        string sql = "SELECT id, nom, cognom, direccio, contrasenya FROM client";
+        string sql = "SELECT id, nom, email, direccio, contrasenya FROM client";
         using SqlCommand cmd = new(sql, _dbConn.sqlConnection);
         using SqlDataReader reader = cmd.ExecuteReader();
 
@@ -37,7 +37,7 @@ public class ClientADO : IClientRepository
     public Client GetById(Guid id)
     {
         _dbConn.Open();
-        string sql = "SELECT id, nom, cognom, direccio, contrasenya FROM client WHERE id = @id";
+        string sql = "SELECT id, nom, email, direccio, contrasenya FROM client WHERE id = @id";
 
         using SqlCommand cmd = new(sql, _dbConn.sqlConnection);
         cmd.Parameters.AddWithValue("@id", id);
@@ -55,13 +55,13 @@ public class ClientADO : IClientRepository
     public void Insert(Client client)
     {
         _dbConn.Open();
-        string sql = @"INSERT INTO client (id, nom, cognom, direccio, contrasenya)
-                        VALUES (@id, @nom, @cognom, @direccio, @contrasenya)";
+        string sql = @"INSERT INTO client (id, nom, email, direccio, contrasenya)
+                        VALUES (@id, @nom, @email, @direccio, @contrasenya)";
         using SqlCommand cmd = new(sql, _dbConn.sqlConnection);
         var entity = ClientMapper.ToEntity(client);
         cmd.Parameters.AddWithValue("@id", entity.Id == Guid.Empty ? Guid.NewGuid() : entity.Id);
         cmd.Parameters.AddWithValue("@nom", entity.Nom);
-        cmd.Parameters.AddWithValue("@cognom", entity.Cognom);
+        cmd.Parameters.AddWithValue("@email", entity.Email);
         cmd.Parameters.AddWithValue("@direccio", entity.Direccio);
         cmd.Parameters.AddWithValue("@contrasenya", entity.Contrasenya);
         cmd.ExecuteNonQuery();
@@ -73,7 +73,7 @@ public class ClientADO : IClientRepository
     {
         _dbConn.Open();
         string sql = @"UPDATE client SET
-                        nom = @nom, cognom = @cognom,
+                        nom = @nom, email = @email,
                        direccio = @direccio, contrasenya = @contrasenya
                        WHERE id = @id";
 
@@ -81,7 +81,7 @@ public class ClientADO : IClientRepository
         var entity = ClientMapper.ToEntity(client);
         cmd.Parameters.AddWithValue("@id", entity.Id == Guid.Empty ? Guid.NewGuid() : entity.Id);
         cmd.Parameters.AddWithValue("@nom", entity.Nom);
-        cmd.Parameters.AddWithValue("@cognom", entity.Cognom);
+        cmd.Parameters.AddWithValue("@email", entity.Email);
         cmd.Parameters.AddWithValue("@direccio", entity.Direccio);
         cmd.Parameters.AddWithValue("@contrasenya", entity.Contrasenya);
         cmd.ExecuteNonQuery();
@@ -106,7 +106,7 @@ public class ClientADO : IClientRepository
     {
         Id = r.GetGuid(0),
         Nom = r.GetString(1),
-        Cognom = r.GetString(2),
+        Email = r.GetString(2),
         Direccio = r.GetString(4),
         Contrasenya = r.GetString(5)
     };
