@@ -1,12 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import CategoryCard from "../components/CategoryCard";
-import { Search, MapPin, AlertCircle, Menu, User } from "lucide-react";
 import Link from "next/link";
+import { Menu, MapPin, Search, User, AlertCircle } from "lucide-react";
+
+import CategoryCard from "../components/CategoryCard";
+import ProductCard from "../components/ProductCard";
+
 import { getCategories, Category } from "../Services/categoryAPI";
 import { searchProducts, Product } from "../Services/productAPI";
-import ProductCard from "../components/ProductCard";
+import { isLoggedIn } from "@/Services/authAPI";
 
 export default function Home() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -16,6 +19,24 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const [logged, setLogged] = useState(false);
+
+  // AUTH
+  useEffect(() => {
+    const updateAuth = () => {
+      setLogged(isLoggedIn());
+    };
+
+    updateAuth(); 
+
+    window.addEventListener("auth-change", updateAuth);
+
+    return () => {
+      window.removeEventListener("auth-change", updateAuth);
+    };
+  }, []);
+
+  // BUSCAR PRODUCTS
   useEffect(() => {
     if (!searchQuery.trim()) {
       setSearchResults([]);
@@ -23,24 +44,22 @@ export default function Home() {
       return;
     }
 
-    const delayDebounceFn = setTimeout(() => {
-      const fetchSearch = async () => {
-        setIsSearching(true);
-        try {
-          const results = await searchProducts(searchQuery);
-          setSearchResults(results);
-        } catch (err) {
-          console.error(err);
-        } finally {
-          setIsSearching(false);
-        }
-      };
-      fetchSearch();
+    const delay = setTimeout(async () => {
+      setIsSearching(true);
+      try {
+        const results = await searchProducts(searchQuery);
+        setSearchResults(results);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsSearching(false);
+      }
     }, 400);
 
-    return () => clearTimeout(delayDebounceFn);
+    return () => clearTimeout(delay);
   }, [searchQuery]);
 
+  // 📦 CATEGORIES
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -63,14 +82,17 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans text-slate-800">
 
-      {/* HEADER */}
+      {/* ================= HEADER ================= */}
       <header className="sticky top-0 z-20 bg-white shadow-sm rounded-b-3xl pb-6 border-b border-slate-100">
 
         <div className="px-5 pt-6 pb-2 flex justify-between items-center">
+
+          {/* MENU */}
           <button className="p-2 -ml-2 rounded-full hover:bg-slate-100">
             <Menu className="w-6 h-6" />
           </button>
 
+          {/* LOCATION */}
           <div className="flex flex-col items-center">
             <span className="text-xs font-semibold text-sky-500 uppercase tracking-widest">
               Direcció d&apos;entrega
@@ -84,14 +106,27 @@ export default function Home() {
             </div>
           </div>
 
-          <Link href="/login" className="p-2 -mr-2 rounded-full bg-orange-100 hover:bg-orange-200 transition-colors">
-            <User className="w-5 h-5 text-orange-500" />
-          </Link>
+          {/* USER BUTTON */}
+          {logged ? (
+            <Link
+              href="/userMenu"
+              className="p-2 -mr-2 rounded-full bg-orange-100 hover:bg-orange-200 transition-colors"
+            >
+              <User className="w-5 h-5 text-orange-500" />
+            </Link>
+          ) : (
+            <Link
+              href="/login"
+              className="p-2 -mr-2 rounded-full bg-orange-100 hover:bg-orange-200 transition-colors"
+            >
+              <User className="w-5 h-5 text-orange-500" />
+            </Link>
+          )}
         </div>
 
         {/* SEARCH */}
         <div className="px-5 mt-2">
-          <div className="flex items-center bg-slate-100 rounded-full px-4 h-12 shadow-inner focus-within:ring-4 focus-within:ring-sky-50 focus-within:border-sky-300 transition-all">
+          <div className="flex items-center bg-slate-100 rounded-full px-4 h-12 shadow-inner focus-within:ring-4 focus-within:ring-sky-50">
             <Search className="w-5 h-5 mr-3 text-slate-400" />
             <input
               type="text"
@@ -104,7 +139,7 @@ export default function Home() {
         </div>
       </header>
 
-      {/* MAIN */}
+      {/* ================= MAIN ================= */}
       <main className="flex-1 px-5 py-6">
 
         {/* LOADING */}
@@ -113,15 +148,6 @@ export default function Home() {
             <h2 className="text-xl font-extrabold">
               Carregant categories...
             </h2>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[1, 2, 3, 4, 5, 6].map(i => (
-                <div
-                  key={i}
-                  className="h-24 bg-slate-200 animate-pulse rounded-xl"
-                />
-              ))}
-            </div>
           </div>
         )}
 
@@ -130,13 +156,6 @@ export default function Home() {
           <div className="flex flex-col items-center justify-center h-64 text-slate-500">
             <AlertCircle className="w-10 h-10 text-red-400 mb-2" />
             <p>{error}</p>
-
-            <button
-              onClick={() => window.location.reload()}
-              className="mt-4 px-5 py-2 bg-slate-800 text-white rounded-full"
-            >
-              Reintentar
-            </button>
           </div>
         )}
 
@@ -149,15 +168,12 @@ export default function Home() {
 
             {isSearching ? (
               <div className="flex justify-center mt-10">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-sky-500"></div>
+                <div className="animate-spin h-8 w-8 border-b-2 border-sky-500 rounded-full" />
               </div>
             ) : searchResults.length > 0 ? (
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {searchResults.map((product) => (
-                  <ProductCard
-                    key={product.id || product.nom}
-                    p={product}
-                  />
+                  <ProductCard key={product.id || product.nom} p={product} />
                 ))}
               </div>
             ) : (
@@ -176,14 +192,9 @@ export default function Home() {
             </h2>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-
               {categories.map((category) => (
-                <CategoryCard
-                  key={category.nom}
-                  category={category}
-                />
+                <CategoryCard key={category.nom} category={category} />
               ))}
-
             </div>
           </>
         )}

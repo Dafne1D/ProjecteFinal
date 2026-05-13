@@ -42,4 +42,18 @@ public class JwtService
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
+    public string ValidateAndGetEmail(string token)
+    {
+        var handler = new JwtSecurityTokenHandler();
+
+        var jwt = handler.ReadJwtToken(token);
+
+        var email = jwt.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email 
+                        || c.Type == "email")?.Value;
+
+        if (email == null)
+            throw new Exception("Invalid token: email not found");
+
+        return email;
+    }
 }

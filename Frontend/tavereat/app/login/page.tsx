@@ -1,109 +1,79 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
-import { login } from "@/Services/authAPI";
+import { login } from "@/Services/loginAPI";
+import { setToken, isLoggedIn } from "@/Services/authAPI";
 
 export default function LoginPage() {
   const router = useRouter();
 
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState(""); // 👈 nuevo
+  const [contrasenya, setContrasenya] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+
+  // si ya está logueado -> home
+  useEffect(() => {
+    if (isLoggedIn()) {
+      router.replace("/");
+    }
+  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
 
     try {
-      setLoading(true);
-      setError("");
-
       const res = await login({
         email,
-        contrasenya: password,
+        contrasenya,
       });
 
-      // guardar token
-      localStorage.setItem("token", res.token);
+      setToken(res.token);
 
-      console.log("LOGIN OK:", res);
-
-      } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError("Hi ha hagut un error");
-        }
-      } finally {
-        setLoading(false);
-      }
+      router.replace("/");
+    } catch (err) {
+      if (err instanceof Error) setError(err.message);
+      else setError("Error desconocido");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
-      {/* HEADER */}
-      <header className="h-20 bg-white border-b border-slate-200 flex items-center px-6">
+    <div className="min-h-screen flex items-center justify-center bg-slate-50">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-6 rounded-xl shadow w-[320px] space-y-3"
+      >
+        <h1 className="text-xl font-bold">Inicia sessió</h1>
+
+        <input
+          className="w-full border p-2 rounded"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+
+        <input
+          className="w-full border p-2 rounded"
+          placeholder="Contrasenya"
+          type="password"
+          value={contrasenya}
+          onChange={(e) => setContrasenya(e.target.value)}
+        />
+
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+
         <button
-          onClick={() => router.back()}
-          className="mr-4 text-sky-600 hover:text-sky-700 transition"
+          disabled={loading}
+          className="w-full bg-sky-600 text-white py-2 rounded"
         >
-          <ArrowLeft size={22} />
+          {loading ? "Entrant..." : "Login"}
         </button>
-
-        <Link href="/" className="text-2xl font-black italic text-sky-600">
-          TaverEat
-        </Link>
-      </header>
-
-      {/* MAIN */}
-      <main className="flex-1 flex items-center justify-center px-4 py-10">
-        <section className="w-full max-w-md bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
-          <h1 className="text-3xl font-black text-slate-800 mb-7">
-            Inicia sessió
-          </h1>
-
-          <form onSubmit={handleSubmit}>
-            <label className="block text-sm font-semibold mb-2">
-              Email
-            </label>
-
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full h-12 border rounded-xl px-4 mb-4"
-            />
-
-            <label className="block text-sm font-semibold mb-2">
-              Contrasenya
-            </label>
-
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full h-12 border rounded-xl px-4"
-            />
-
-            {error && (
-              <p className="text-red-500 text-sm mt-3">{error}</p>
-            )}
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full h-12 bg-sky-600 text-white rounded-full mt-5"
-            >
-              {loading ? "Carregant..." : "Entrar"}
-            </button>
-          </form>
-        </section>
-      </main>
+      </form>
     </div>
   );
 }

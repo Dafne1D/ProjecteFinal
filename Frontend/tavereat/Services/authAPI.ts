@@ -1,53 +1,20 @@
-const API_URL = "http://localhost:5000";
+const TOKEN_KEY = "token";
 
-export interface LoginRequest {
-  email: string;
-  contrasenya: string;
-}
-
-export interface LoginResponse {
-  token: string;
-  email: string;
-}
-
-export const login = async (
-  data: LoginRequest
-): Promise<LoginResponse> => {
-  const res = await fetch(`${API_URL}/auth/login`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
-
-  if (!res.ok) {
-    let errText = "";
-
-    try {
-      errText = await res.text();
-    } catch {
-      errText = "Error al iniciar sessió";
-    }
-
-    throw new Error(errText || "Error al iniciar sessió");
-  }
-
-  return res.json();
-};
-
-export const saveToken = (token: string) => {
-  localStorage.setItem("token", token);
-};
-
-export const getToken = () => {
-  return localStorage.getItem("token");
+export const setToken = (token: string) => {
+  localStorage.setItem(TOKEN_KEY, token);
+  window.dispatchEvent(new Event("auth-change"));
 };
 
 export const logout = () => {
-  localStorage.removeItem("token");
+  localStorage.removeItem(TOKEN_KEY);
+  window.dispatchEvent(new Event("auth-change"));
+  window.location.href = "/";
+};
+
+export const getToken = () => {
+  return localStorage.getItem(TOKEN_KEY);
 };
 
 export const isLoggedIn = () => {
-  return !!localStorage.getItem("token");
+  return !!getToken();
 };
