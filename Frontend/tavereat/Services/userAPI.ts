@@ -6,12 +6,14 @@ export type UserUpdateRequest = {
   nom: string;
   email: string;
   direccio: string;
+  contrasenya: string;
 };
 
 export type User = {
   nom: string;
   email: string;
   direccio: string;
+  contrasenya: string;
 };
 
 // get user

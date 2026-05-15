@@ -11,6 +11,8 @@ import { getCategories, Category } from "../Services/categoryAPI";
 import { searchProducts, Product } from "../Services/productAPI";
 import { isLoggedIn } from "@/Services/authAPI";
 
+import { getMe, updateMe } from "@/Services/userAPI";
+
 export default function Home() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -20,6 +22,10 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
 
   const [logged, setLogged] = useState(false);
+
+  const [direccio, setDireccio] = useState("La meva ubicació");
+  const [editingLocation, setEditingLocation] = useState(false);
+  const [newLocation, setNewLocation] = useState("");
 
   // AUTH
   useEffect(() => {
@@ -35,6 +41,26 @@ export default function Home() {
       window.removeEventListener("auth-change", updateAuth);
     };
   }, []);
+
+  // la meva ubicació update 
+  useEffect(() => {
+    if (!logged) return;
+
+    const fetchUser = async () => {
+      try {
+        const user = await getMe();
+
+        if (user.direccio) {
+          setDireccio(user.direccio);
+          setNewLocation(user.direccio);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchUser();
+  }, [logged]);
 
   // BUSCAR PRODUCTS
   useEffect(() => {
@@ -59,7 +85,7 @@ export default function Home() {
     return () => clearTimeout(delay);
   }, [searchQuery]);
 
-  // 📦 CATEGORIES
+  // CATEGORIES
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -77,7 +103,25 @@ export default function Home() {
     };
 
     fetchCategories();
-  }, []);
+      }, []);
+
+      const handleSaveLocation = async () => {
+      try {
+        const user = await getMe();
+
+        await updateMe({
+          nom: user.nom,
+          email: user.email,
+          direccio: newLocation,
+          contrasenya: ""
+        });
+
+        setDireccio(newLocation);
+        setEditingLocation(false);
+      } catch (err) {
+        console.error(err);
+      }
+    };
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans text-slate-800">
@@ -92,18 +136,51 @@ export default function Home() {
             <Menu className="w-6 h-6" />
           </button>
 
-          {/* LOCATION */}
-          <div className="flex flex-col items-center">
+          {/*DIRECCIÓ ENTREGA*/}
+          <div className="flex flex-col items-center relative">
             <span className="text-xs font-semibold text-sky-500 uppercase tracking-widest">
               Direcció d&apos;entrega
             </span>
 
-            <div className="flex items-center space-x-1 cursor-pointer group">
-              <span className="text-sm font-bold truncate max-w-[150px] group-hover:text-sky-500">
-                La meva ubicació
+            <button
+              onClick={() => logged && setEditingLocation(!editingLocation)}
+              className="flex items-center space-x-1 cursor-pointer group"
+            >
+              <span className="text-sm font-bold truncate max-w-[170px] group-hover:text-sky-500">
+                {direccio}
               </span>
+
               <MapPin className="w-4 h-4 text-sky-400" />
-            </div>
+            </button>
+
+            {/* CANVIAR LOCATION */}
+            {editingLocation && (
+              <div className="absolute top-14 bg-white shadow-xl border border-slate-200 rounded-2xl p-4 w-72 z-50">
+                <input
+                  type="text"
+                  value={newLocation}
+                  onChange={(e) => setNewLocation(e.target.value)}
+                  placeholder="Nova direcció"
+                  className="w-full border border-slate-200 rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-sky-200"
+                />
+
+                <div className="flex gap-2 mt-3">
+                  <button
+                    onClick={handleSaveLocation}
+                    className="flex-1 bg-sky-500 text-white py-2 rounded-xl hover:bg-sky-600 transition"
+                  >
+                    Guardar
+                  </button>
+
+                  <button
+                    onClick={() => setEditingLocation(false)}
+                    className="flex-1 bg-slate-100 py-2 rounded-xl hover:bg-slate-200 transition"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* USER BUTTON */}
