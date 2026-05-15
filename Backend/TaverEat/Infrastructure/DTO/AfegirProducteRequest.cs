@@ -1,3 +1,3 @@
 namespace Infrastructure.DTO;
 
-public record AfegirProducteRequest(Guid ClientId, Guid ProducteId);
+public record AfegirProducteRequest(Guid ProducteId);

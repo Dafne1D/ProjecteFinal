@@ -12,6 +12,6 @@ public class ComandaVendaLinea
         Id = id;
         ProducteId = producteId;
         ComandaId = comandaId;
-        Quantitat = quantitat;
+        Quantitat = quantitat;  
     }
 }

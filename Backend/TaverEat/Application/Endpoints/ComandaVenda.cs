@@ -1,7 +1,7 @@
 using API.Services;
 using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using TaverEat.Repository;
+using Infrastructure.Repositories;
 using Infrastructure.DTO;
 
 namespace Application.Endpoints;
