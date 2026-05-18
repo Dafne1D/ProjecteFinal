@@ -4,25 +4,8 @@ import "./globals.css";
 
 import { CartProvider } from "@/context/CartContext";
 import CartDrawer from "@/components/CartCard";
-
+import LayoutWrapper from "@/components/LayoutWrapper";
 import { ReactNode } from "react";
-
-export default function RootLayout({
-  children,
-}: {
-  children: ReactNode;
-}) {
-  return (
-    <html>
-      <body>
-        <CartProvider>
-          {children}
-          <CartDrawer />
-        </CartProvider>
-      </body>
-    </html>
-  );
-}
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,6 +16,26 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+export default function RootLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  return (
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className="min-h-full antialiased">
+        <CartProvider>
+          <LayoutWrapper>
+            {children}
+          </LayoutWrapper>
+
+          <CartDrawer />
+        </CartProvider>
+      </body>
+    </html>
+  );
+}
 
 export const metadata: Metadata = {
   title: "TaverEat",

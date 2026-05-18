@@ -40,39 +40,37 @@ export default function CategoryCard({ category }: CategoryCardProps) {
   return (
     <Link
       href={`/categories/${encodeURIComponent(category.nom)}`}
-      className="group bg-white rounded-2xl shadow-sm border border-gray-100 p-3 flex items-center space-x-4 transition-all hover:shadow-md hover:-translate-y-1 active:scale-95"
+      className="group relative bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-lg transition overflow-hidden"
     >
       {/* IMAGE */}
-      <div className="relative w-20 h-20 bg-sky-50 rounded-xl overflow-hidden shrink-0 border border-sky-100">
-
+      <div className="relative h-40 bg-slate-100 overflow-hidden">
         {imageUrl ? (
           <Image
             src={imageUrl}
             alt={category.nom}
             fill
             unoptimized
-            className="object-cover"
+            className="object-cover group-hover:scale-105 transition duration-300"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-slate-400 text-xs">
+          <div className="w-full h-full flex items-center justify-center text-slate-400 font-semibold">
             Sense imatge
           </div>
         )}
 
-      </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
 
-      {/* CONTENT */}
-      <div className="flex-1 min-w-0">
-        <h3 className="text-lg font-bold text-gray-800 truncate group-hover:text-sky-600 transition-colors">
-          {category.nom}
-        </h3>
-      </div>
+        {/* TITUL */}
+        <div className="absolute bottom-3 left-3 right-3 flex justify-between items-center">
+          <h3 className="text-white font-black text-lg truncate">
+            {category.nom}
+          </h3>
 
-      {/* ARROW */}
-      <div className="text-gray-300 group-hover:text-sky-600 transition-colors">
-        <ChevronRight className="w-5 h-5" />
+          <div className="bg-white/90 backdrop-blur rounded-full p-1 text-sky-600">
+            <ChevronRight className="w-4 h-4" />
+          </div>
+        </div>
       </div>
-
     </Link>
   );
 }
