@@ -1,8 +1,8 @@
 using API.Services;
+using Domain.Entities;
+using Infrastructure.DTO;
 using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Infrastructure.Repositories;
-using Infrastructure.DTO;
 
 namespace Application.Endpoints;
 
@@ -10,22 +10,41 @@ public static class ComandaVendaEndpoint
 {
     public static void MapComandaVendaEndpoints(this WebApplication app)
     {
-        // GET comanda activa de client
-        app.MapGet("/comandaVenda/{clientId}", (Guid clientId, [FromServices] IComandaVendaRepository repo) =>
+        app.MapPost("/comandaVenda/add-product", (
+            AfegirProducteRequest request,
+            [FromServices] IComandaVendaRepository repo
+        ) =>
         {
-           var comanda = repo.GetComandaActivaByClient(clientId);
-           if (comanda is null)
-                return Results.NotFound("No hi ha cap comanda activa");
+            // buscar comanda activa
+            var comanda = repo.GetComandaActivaByClient(request.ClientId);
 
-            return Results.Ok(ComandaVendaResponse.FromComandaVenda(comanda));
-        }
-        );
+            // si no existe -> crear
+            if (comanda is null)
+            {
+                comanda = repo.CreateComanda(request.ClientId);
+            }
 
-        // POST crear comanda nova
-        app.MapPost("/comandaVenda/{clientId}", (Guid clientId, [FromServices] IComandaVendaRepository repo) =>
-        {
-            var comanda = repo.CreateComanda(clientId);
-            return Results.Ok(ComandaVendaResponse.FromComandaVenda(comanda));
+            // buscar si ya existe linea
+            var linea = repo.GetLinea(comanda.Id, request.ProducteId);
+
+            // si existe -> sumar cantidad
+            if (linea is not null)
+            {
+                linea.Quantitat += 1;
+
+                repo.UpdateLinea(linea);
+            }
+            else
+            {
+                repo.AddLinea(new ComandaVendaLinea(
+                    Guid.NewGuid(),
+                    request.ProducteId,
+                    comanda.Id,
+                    1
+                ));
+            }
+
+            return Results.Ok();
         });
     }
 }
