@@ -57,3 +57,5 @@ export const deleteFromCart = async (producteId: string) => {
 
     return res.json();
 }
+
+//FALTA CONFIRMAR Carrito
