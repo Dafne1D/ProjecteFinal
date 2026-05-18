@@ -55,23 +55,28 @@ public static class ComandaVendaEndpoint
             if (comanda is null)
             {
                 return Results.Ok(
-                    new ComandaDetallResponse(Guid.Empty, new List<ComandaLineaResponse>())
+                    new ComandaDetallResponse(Guid.Empty, new List<ComandaLineaResponse>(), 0)
                 );
             }
 
             var lineas = repo.GetLineasWithProducte(comanda.Id);
 
+            var productes = lineas.Select(linea =>
+                new ComandaLineaResponse(
+                    linea.producte.Id,
+                    linea.producte.Nom,
+                    linea.producte.Preu,
+                    linea.linea.Quantitat
+                )
+            ).ToList();
+            decimal total = lineas.Sum(x =>
+                x.producte.Preu * x.linea.Quantitat
+            );
+
             var response = new ComandaDetallResponse(
                 comanda.Id,
-
-                lineas.Select(linea =>
-                    new ComandaLineaResponse(
-                        linea.producte.Id,
-                        linea.producte.Nom,
-                        linea.producte.Preu,
-                        linea.linea.Quantitat
-                    )
-                ).ToList()
+                productes,
+                total
             );
 
             return Results.Ok(response);
