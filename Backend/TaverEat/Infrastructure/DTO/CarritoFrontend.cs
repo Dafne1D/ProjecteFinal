@@ -9,5 +9,6 @@ public record ComandaLineaResponse(
 
 public record ComandaDetallResponse(
     Guid ComandaId,
-    List<ComandaLineaResponse> Productes
+    List<ComandaLineaResponse> Productes,
+    decimal Total
 );
