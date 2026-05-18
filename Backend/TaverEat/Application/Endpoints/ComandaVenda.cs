@@ -10,37 +10,24 @@ public static class ComandaVendaEndpoint
 {
     public static void MapComandaVendaEndpoints(this WebApplication app)
     {
-        // ADD PRODUCT
-        app.MapPost("/cart/add", (HttpContext http,AfegirProducteRequest request, [FromServices] IComandaVendaRepository repo, [FromServices] IClientRepository clientRepo, [FromServices] JwtService jwt) =>
+        // ADD PRODUCT TO CART
+        app.MapPost("/cart/add",(HttpContext http, AfegirProducteRequest request, IComandaVendaRepository repo,IClientRepository clientRepo, JwtService jwt) =>
         {
-            // token
             var token = http.Request.Headers.Authorization
                 .ToString()
                 .Replace("Bearer ", "");
 
-            // email desde jwt
             var email = jwt.ValidateAndGetEmail(token);
-
-            // client logged
             var client = clientRepo.GetByEmail(email);
 
-            // buscar carrito activo
-            var comanda = repo.GetComandaActivaByClient(client.Id);
+            var comanda = repo.GetComandaActivaByClient(client.Id)
+                         ?? repo.CreateComanda(client.Id);
 
-            // si no existe -> crear
-            if (comanda is null)
-            {
-                comanda = repo.CreateComanda(client.Id);
-            }
-
-            // buscar linea existente
             var linea = repo.GetLinea(comanda.Id, request.ProducteId);
 
-            // sumar cantidad
             if (linea is not null)
             {
                 linea.Quantitat += 1;
-
                 repo.UpdateLinea(linea);
             }
             else
@@ -53,69 +40,92 @@ public static class ComandaVendaEndpoint
                 ));
             }
 
-            return Results.Ok();
+            return Results.Ok(new { message = "Producte afegit al carrito" });
         });
 
-        // GET CART
-        app.MapGet("/cart", (
-            HttpContext http,
-            [FromServices] IComandaVendaRepository repo,
-            [FromServices] IClientRepository clientRepo,
-            [FromServices] JwtService jwt
-        ) =>
+        // GET CART (CURRENT USER)
+        app.MapGet("/cart",(HttpContext http, IComandaVendaRepository repo, IClientRepository clientRepo, JwtService jwt) =>
         {
-            // token
             var token = http.Request.Headers.Authorization
                 .ToString()
                 .Replace("Bearer ", "");
 
-            // email
             var email = jwt.ValidateAndGetEmail(token);
-
-            // user
             var client = clientRepo.GetByEmail(email);
 
-            // carrito activo
             var comanda = repo.GetComandaActivaByClient(client.Id);
 
-            // carrito vacío
             if (comanda is null)
             {
-                return Results.Ok(
-                    new ComandaDetallResponse(
-                        Guid.Empty,
-                        new List<ComandaLineaResponse>(),
-                        0
-                    )
-                );
+                return Results.Ok(new ComandaDetallResponse(
+                    Guid.Empty,
+                    new List<ComandaLineaResponse>(),
+                    0
+                ));
             }
 
-            // lineas
             var lineas = repo.GetLineasWithProducte(comanda.Id);
 
-            // productos
-            var productes = lineas.Select(x =>
-                new ComandaLineaResponse(
-                    x.producte.Id,
-                    x.producte.Nom,
-                    x.producte.Preu,
-                    x.linea.Quantitat
-                )
-            ).ToList();
+            var productes = lineas.Select(linea => new ComandaLineaResponse(
+                linea.producte.Id,
+                linea.producte.Nom,
+                linea.producte.Preu,
+                linea.linea.Quantitat
+            )).ToList();
 
-            // total
-            decimal total = lineas.Sum(x =>
-                x.producte.Preu * x.linea.Quantitat
-            );
+            var total = lineas.Sum(x => x.producte.Preu * x.linea.Quantitat);
 
-            // response
-            var response = new ComandaDetallResponse(
+            return Results.Ok(new ComandaDetallResponse(
                 comanda.Id,
                 productes,
                 total
-            );
+            ));
+        });
 
-            return Results.Ok(response);
+        app.MapPut("/cart/item/update", (HttpContext http, IComandaVendaRepository repo, IClientRepository clientRepo, JwtService jwt, Guid producteId, int quantitat) =>
+        {
+            var token = http.Request.Headers.Authorization.ToString().Replace("Bearer ", "");
+            var email = jwt.ValidateAndGetEmail(token);
+            var client = clientRepo.GetByEmail(email);
+
+            var comanda = repo.GetComandaActivaByClient(client.Id);
+            if (comanda is null) return Results.Ok();
+
+            var linea = repo.GetLinea(comanda.Id, producteId);
+
+            if (linea is null)
+                return Results.NotFound();
+
+            if (quantitat <= 0)
+            {
+                repo.DeleteLinea(linea.Id);
+                return Results.Ok();
+            }
+
+            linea.Quantitat = quantitat;
+            repo.UpdateLinea(linea);
+
+            return Results.Ok();
+        });
+
+        // REMOVE ITEM
+        app.MapDelete("/cart/item/{producteId}", (HttpContext http, Guid producteId, IComandaVendaRepository repo, IClientRepository clientRepo, JwtService jwt) =>
+        {
+            var token = http.Request.Headers.Authorization.ToString().Replace("Bearer ", "");
+            var email = jwt.ValidateAndGetEmail(token);
+            var client = clientRepo.GetByEmail(email);
+
+            var comanda = repo.GetComandaActivaByClient(client.Id);
+            if (comanda is null) return Results.Ok();
+
+            var linea = repo.GetLinea(comanda.Id, producteId);
+
+            if (linea is not null)
+            {
+                repo.DeleteLinea(linea.Id);
+            }
+
+            return Results.Ok();
         });
     }
 }

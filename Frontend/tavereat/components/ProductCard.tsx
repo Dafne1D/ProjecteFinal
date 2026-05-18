@@ -3,15 +3,20 @@
 import { ShoppingCart } from "lucide-react";
 import { Product } from "../Services/productAPI";
 import { addToCart } from "@/Services/comandaVendaAPI";
+import { useCart } from "@/context/CartContext";
 
 export default function ProductCard({ p }: { p: Product }) {
   const imageUrl = p.imgUrl?.trim() || "";
+
+  const { refreshCart, setOpen } = useCart();
 
   const handleAddToCart = async () => {
     try {
       await addToCart(p.id);
 
-      alert("Producte afegit al carrito");
+      await refreshCart();   
+      setOpen(true);     
+
     } catch (err) {
       console.error(err);
       alert("Error afegint producte");
