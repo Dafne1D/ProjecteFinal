@@ -1,51 +1,65 @@
-import Image from "next/image";
+"use client";
+
+import { ShoppingCart } from "lucide-react";
 import { Product } from "../Services/productAPI";
+import { addToCart } from "@/Services/comandaVendaAPI";
+
 export default function ProductCard({ p }: { p: Product }) {
   const imageUrl = p.imgUrl?.trim() || "";
 
+  const handleAddToCart = async () => {
+    try {
+      await addToCart(p.id);
+
+      alert("Producte afegit al carrito");
+    } catch (err) {
+      console.error(err);
+      alert("Error afegint producte");
+    }
+  };
+
   return (
-    <div className="group relative bg-white rounded-2xl border border-slate-100 shadow-sm p-3 hover:shadow-md transition flex items-center space-x-4">
+    <div className="group bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-lg transition overflow-hidden">
+
       {/* IMAGE */}
-      <div className="relative w-24 h-24 bg-slate-100 rounded-xl overflow-hidden shrink-0">
+      <div className="relative h-44 bg-slate-100 overflow-hidden">
         {imageUrl ? (
           <img
             src={imageUrl}
             alt={p.nom}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+            className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-slate-200 text-slate-400 text-xs font-semibold text-center px-2">
-            Sense<br />Imatge
+          <div className="w-full h-full flex items-center justify-center text-slate-400 font-semibold">
+            Sense imatge
           </div>
         )}
-      </div>
 
-      {/* CONTENT */}
-      <div className="flex-1 min-w-0 py-1">
-        <h2 className="font-bold text-slate-800 text-lg truncate">
-          {p.nom}
-        </h2>
-        <p className="text-sm text-slate-500 mt-0.5 line-clamp-2">
-          {p.descripcio}
-        </p>
-
-        <div className="mt-2 flex items-center justify-between">
-          <span className="text-sky-500 font-bold text-lg">
-            {p.preu} €
-          </span>
+        {/* PRICE */}
+        <div className="absolute top-3 right-3 bg-white/90 backdrop-blur px-3 py-1 rounded-full shadow text-sky-600 font-black text-sm">
+          {p.preu} €
         </div>
       </div>
 
-      {/* ADD BUTTON */}
-      <button className="absolute bottom-3 right-3 w-12 h-12 rounded-full bg-sky-500 hover:bg-sky-600 active:scale-95 transition flex items-center justify-center shadow-lg border-2 border-white">
-        <Image
-          src="/imgs/mas.png"
-          alt="add"
-          width={30}
-          height={30}
-          className="object-contain"
-        />
-      </button>
+      {/* CONTENT */}
+      <div className="p-4">
+
+        <h2 className="font-black text-lg text-slate-800 truncate">
+          {p.nom}
+        </h2>
+
+        <p className="text-sm text-slate-500 mt-1 line-clamp-2 min-h-[40px]">
+          {p.descripcio}
+        </p>
+
+        {/* BUTTON */}
+        <button
+          onClick={handleAddToCart}
+          className="mt-4 h-11 w-11 rounded-2xl bg-sky-500 hover:bg-sky-600 transition flex items-center justify-center text-white ml-auto"
+        >
+          <ShoppingCart className="w-5 h-5" />
+        </button>
+      </div>
     </div>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, MapPin, Search, User, AlertCircle } from "lucide-react";
+import { MapPin, Search, User, AlertCircle } from "lucide-react";
 
 import CategoryCard from "../components/CategoryCard";
 import ProductCard from "../components/ProductCard";
@@ -12,6 +12,8 @@ import { searchProducts, Product } from "../Services/productAPI";
 import { isLoggedIn } from "@/Services/authAPI";
 
 import { getMe, updateMe } from "@/Services/userAPI";
+
+import { ShoppingCart } from "lucide-react";
 
 export default function Home() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -132,9 +134,12 @@ export default function Home() {
         <div className="px-5 pt-6 pb-2 flex justify-between items-center">
 
           {/* MENU */}
-          <button className="p-2 -ml-2 rounded-full hover:bg-slate-100">
-            <Menu className="w-6 h-6" />
-          </button>
+          <Link
+            href="/carro"
+            className="p-2 rounded-full bg-sky-100 hover:bg-sky-200 transition-colors"
+          >
+            <ShoppingCart className="w-5 h-5 text-sky-600" />
+          </Link>
 
           {/*DIRECCIÓ ENTREGA*/}
           <div className="flex flex-col items-center relative">

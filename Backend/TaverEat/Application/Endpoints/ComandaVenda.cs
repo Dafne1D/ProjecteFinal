@@ -10,7 +10,7 @@ public static class ComandaVendaEndpoint
 {
     public static void MapComandaVendaEndpoints(this WebApplication app)
     {
-        app.MapPost("/comandaVenda/add-product", (
+        app.MapPost("/cart/add", (
             AfegirProducteRequest request,
             [FromServices] IComandaVendaRepository repo
         ) =>
