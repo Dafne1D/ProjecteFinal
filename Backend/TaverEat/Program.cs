@@ -12,7 +12,7 @@ builder.Services.AddScoped<TaverDBConnection>();
 
 builder.Services.AddScoped<ICategoryRepository, CategoryADO>();
 builder.Services.AddScoped<IProductRepository, ProductADO>();
-builder.Services.AddScoped<IComandaVendaRepository, ComandaVendaRepository>();
+builder.Services.AddScoped<IComandaVendaRepository, ComandaVendaADO>();
 builder.Services.AddScoped<IClientRepository, ClientADO>();
 builder.Services.AddScoped<JwtService>();
 
