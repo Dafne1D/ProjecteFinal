@@ -18,16 +18,16 @@ public static class ComandaVendaEndpoint
             // buscar comanda activa
             var comanda = repo.GetComandaActivaByClient(request.ClientId);
 
-            // si no existe -> crear
+            // si no elineaiste -> crear
             if (comanda is null)
             {
                 comanda = repo.CreateComanda(request.ClientId);
             }
 
-            // buscar si ya existe linea
+            // buscar si ya elineaiste linea
             var linea = repo.GetLinea(comanda.Id, request.ProducteId);
 
-            // si existe -> sumar cantidad
+            // si elineaiste -> sumar cantidad
             if (linea is not null)
             {
                 linea.Quantitat += 1;
@@ -45,6 +45,36 @@ public static class ComandaVendaEndpoint
             }
 
             return Results.Ok();
+        });
+
+        // GET carrito
+        app.MapGet("/comandaVenda/{clientId}/lineas", (Guid clientId, IComandaVendaRepository repo) =>
+        {
+            var comanda = repo.GetComandaActivaByClient(clientId);
+
+            if (comanda is null)
+            {
+                return Results.Ok(
+                    new ComandaDetallResponse(Guid.Empty, new List<ComandaLineaResponse>())
+                );
+            }
+
+            var lineas = repo.GetLineasWithProducte(comanda.Id);
+
+            var response = new ComandaDetallResponse(
+                comanda.Id,
+
+                lineas.Select(linea =>
+                    new ComandaLineaResponse(
+                        linea.producte.Id,
+                        linea.producte.Nom,
+                        linea.producte.Preu,
+                        linea.linea.Quantitat
+                    )
+                ).ToList()
+            );
+
+            return Results.Ok(response);
         });
     }
 }
