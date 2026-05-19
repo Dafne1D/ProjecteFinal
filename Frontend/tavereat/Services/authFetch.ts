@@ -1,23 +1,29 @@
-import { getToken, logout } from "@/Services/authAPI";
+export const authFetch = async (
+  url: string,
+  options: RequestInit = {}
+) => {
+  const token = localStorage.getItem("token");
 
-export const authFetch = async (url: string, options: RequestInit = {}) => {
-  const token = getToken();
-
+  // NO LOGIN
   if (!token) {
-    throw new Error("No token");
+    window.location.href = "/login";
   }
 
   const res = await fetch(url, {
     ...options,
     headers: {
-      ...(options.headers || {}),
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
+      ...(options.headers || {}),
     },
   });
-  
+
+  // TOKEN INVÁLIDO / EXPIRADO
   if (res.status === 401) {
+    localStorage.removeItem("token");
+
     window.location.href = "/login";
+
     throw new Error("Unauthorized");
   }
 

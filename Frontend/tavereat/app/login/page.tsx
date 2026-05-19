@@ -6,6 +6,7 @@ import { ArrowLeft } from "lucide-react";
 
 import { login } from "@/Services/loginAPI";
 import { setToken, isLoggedIn } from "@/Services/authAPI";
+import Link from "next/link";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -60,7 +61,7 @@ export default function LoginPage() {
         >
           <ArrowLeft size={22} />
         </button>
-
+    
         <h1 className="text-2xl font-black text-slate-800 truncate">
           Login
         </h1>
@@ -73,6 +74,7 @@ export default function LoginPage() {
           onSubmit={handleSubmit}
           className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-[340px] space-y-4"
         >
+          
           <div>
             <h2 className="text-2xl font-black text-slate-800">
               Inicia sessió
@@ -110,6 +112,10 @@ export default function LoginPage() {
           >
             {loading ? "Entrant..." : "Login"}
           </button>
+
+          <Link href="/register">
+          Registrar-se
+          </Link>
         </form>
       </div>
     </div>

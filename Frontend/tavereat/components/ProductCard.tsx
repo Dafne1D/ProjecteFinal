@@ -14,12 +14,11 @@ export default function ProductCard({ p }: { p: Product }) {
     try {
       await addToCart(p.id);
 
-      await refreshCart();   
-      setOpen(true);     
+      await refreshCart();
+      setOpen(true);
 
     } catch (err) {
       console.error(err);
-      alert("Error afegint producte");
     }
   };
 
