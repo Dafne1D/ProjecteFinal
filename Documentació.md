@@ -90,7 +90,6 @@ La comunicació entre l’aplicació i la base de dades es realitza a través de
 ## Control de versions
 
 Pel control de versions faig servir GitHub.
-
 ---
 
 # Arquitectura del sistema

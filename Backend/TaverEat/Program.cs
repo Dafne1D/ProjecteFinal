@@ -35,7 +35,6 @@ app.UseCors("AllowFrontend");
 // -----------------------------
 app.MapCategoriaEndpoints();
 app.MapProductEndpoints();
-app.MapImgUrlEndpoints();
 app.MapComandaVendaEndpoints();
 app.MapClientEndpoints();
 app.MapLoginEndpoints();
