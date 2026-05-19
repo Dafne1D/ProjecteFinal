@@ -15,10 +15,10 @@ export const authFetch = async (url: string, options: RequestInit = {}) => {
       Authorization: `Bearer ${token}`,
     },
   });
-
+  
   if (res.status === 401) {
-    logout();
-    throw new Error("Sesión expirada");
+    window.location.href = "/login";
+    throw new Error("Unauthorized");
   }
 
   return res;
