@@ -1,42 +1,39 @@
-# DOCUMENTACIÓ DE PROJECTE  
-## APP “TaverEat”  
-**Per Dafne Carrillo Reyes**
+# DOCUMENTACIÓ DE PROJECTE
+# APP “TaverEat”
+## PER DAFNE CARRILLO REYES
 
----
+<br><br><br><br><br><br><br><br>
 
-**2n DAM INS. BOSC DE LA COMA**  
-**19/05/2026**
+### 2n DAM INS. BOSC DE LA COMA
+### 19/05/2026
 
 ---
 
 # Índex
 
-- [Descripció del projecte](#descripció-del-projecte)
-- [Objectius](#objectius)
-- [Usuaris del sistema](#usuaris-del-sistema)
-- [Funcions de client](#funcions-de-client)
-- [Gestió de comandes](#gestió-de-comandes)
-- [Arquitectura del sistema](#arquitectura-del-sistema)
-  - [Frontend (Client)](#frontend-client)
-  - [Backend](#backend)
-  - [Model relacional](#model-relacional)
-- [Introducció](#introducció)
-- [Anàlisi del projecte](#anàlisi-del-projecte)
-  - [Funcions segons tipus d’usuari](#funcions-segons-tipus-dusuari)
-- [Tecnologies utilitzades](#tecnologies-utilitzades)
-  - [Backend](#backend-1)
-  - [Frontend](#frontend)
-  - [Base de dades](#base-de-dades)
-  - [Control de versions](#control-de-versions)
-- [Arquitectura del sistema](#arquitectura-del-sistema-1)
-- [Peticions](#peticions)
-- [Bibliografia](#bibliografia)
+1. Introducció  
+2. Anàlisi de projecte  
+   - Funcions segons tipus d’usuari  
+3. Tecnologies utilitzades  
+   - Backend  
+   - Frontend  
+   - Base de dades  
+   - Control de versions  
+4. Arquitectura de sistema  
+5. Peticions API  
+   - Categories  
+   - Clients  
+   - Autenticació  
+   - Carret  
+   - Productes  
+6. Conclusions  
+7. Bibliografia  
 
 ---
 
 # Introducció
 
-Aquest projecte consisteix en el desenvolupament d’una app web inspirada en “JustEat”, però adaptada al bar de la meva mare: **La Taverneta**. El principi d’aquest projecte és modernitzar el nostre bar aprofitant que al nostre poble no arriben serveis com aquest.
+Aquest projecte consisteix en el desenvolupament d’una aplicació web inspirada en :contentReference[oaicite:0]{index=0}, però adaptada al bar de la meva mare: “La Taverneta”. El principi d’aquest projecte és modernitzar el nostre bar aprofitant que al nostre poble no arriben serveis com aquest.
 
 L’aplicació permet consultar el menú, realitzar una comanda i fer el pagament de forma online.
 
@@ -44,16 +41,15 @@ A més a més de la part destinada als clients, també he desenvolupat un panell
 
 Fer aquest projecte m’ha permès aplicar els coneixements relacionats amb el desenvolupament web, la gestió de bases de dades i la comunicació entre frontend i backend.
 
-L’objectiu final del projecte és desenvolupar una app web per al gestionament de comandes utilitzant tecnologies com ASP.NET i Next.js.
+L’objectiu final del projecte és desenvolupar una aplicació web per al gestionament de comandes utilitzant tecnologies com :contentReference[oaicite:1]{index=1} i :contentReference[oaicite:2]{index=2}.
 
 ---
 
-# Anàlisi del projecte
+# Anàlisi de projecte
 
 ## Funcions segons tipus d’usuari
 
 ### Usuari
-
 - Registre i inici de sessió dins la plataforma
 - Consultar el menú
 - Afegir i eliminar productes del carret
@@ -61,7 +57,6 @@ L’objectiu final del projecte és desenvolupar una app web per al gestionament
 - Consultar l’estat de la comanda
 
 ### Panell administratiu / cuiner
-
 - Visualitzar les comandes
 - Actualitzar l’estat d’aquestes
 
@@ -69,30 +64,39 @@ L’objectiu final del projecte és desenvolupar una app web per al gestionament
 
 # Tecnologies utilitzades
 
-Per al desenvolupament d’aquest projecte s’han fet servir diferents tecnologies per tal d’assegurar l’escalabilitat i facilitar-ne el manteniment.
+Per al desenvolupament d’aquest projecte s’han fet servir diferents tecnologies, per tal d’assegurar l’escalabilitat del sistema i facilitar-ne el manteniment.
 
 ## Backend
 
-Per al backend he utilitzat ASP.NET Core, el qual permet la creació d’una API segura per gestionar la lògica de l’aplicació, la comunicació amb la base de dades i l’autentificació d’usuaris mitjançant tokens.
+Per al backend he utilitzat :contentReference[oaicite:3]{index=3}, el qual permet la creació d’una API segura per gestionar la lògica de l’aplicació, la comunicació amb la base de dades i l’autenticació d’usuaris mitjançant tokens.
 
 També he aplicat una arquitectura basada en capes (endpoints, serveis i repositoris) per millorar l’organització del codi i facilitar-ne el manteniment.
 
 ## Frontend
 
-Per al frontend he fet servir Next.js, que em permet desenvolupar una interfície basada en components. Aquesta tecnologia facilita l’experiència d’usuari, especialment en aplicacions web amb moltes interaccions, com és el cas d’un sistema de comandes.
+Per al frontend he fet servir :contentReference[oaicite:4]{index=4}, que em permet desenvolupar una interfície basada en components.
+
+Aquesta tecnologia facilita l’experiència d’usuari, especialment en aplicacions web amb moltes interaccions com és el cas d’un sistema de comandes.
+
+- :contentReference[oaicite:5]{index=5}
+- Docker
 
 ## Base de dades
 
-Pel que fa a la base de dades, he utilitzat SQL Server, permetent l’emmagatzematge i la gestió estructurada de la informació relacionada amb usuaris, productes i comandes.
+Pel que fa a la base de dades he utilitzat :contentReference[oaicite:6]{index=6}, permetent l’emmagatzematge i la gestió de forma estructurada de la informació relacionada amb usuaris, productes i comandes.
 
 La comunicació entre l’aplicació i la base de dades es realitza a través del backend, assegurant la integritat i seguretat de les dades.
 
+També he utilitzat:
+- DBeaver
+
 ## Control de versions
 
-Pel control de versions faig servir GitHub.
+Pel control de versions faig servir :contentReference[oaicite:7]{index=7}.
+
 ---
 
-# Arquitectura del sistema
+# Arquitectura de sistema
 
 El funcionament general del sistema es basa en el següent flux:
 
@@ -103,18 +107,11 @@ El funcionament general del sistema es basa en el següent flux:
 
 ---
 
-# Peticions
+# Peticions API
 
-*(Apartat pendent de completar)*
+# Categories
 
----
+## GET ALL
 
-# Bibliografia
-
-## Next.js
-
-- https://nextjs.org/docs
-
-## ASP.NET
-
-- https://learn.microsoft.com/es-es/aspnet/core/?view=aspnetcore-10.0
+```http
+GET http://localhost:5000/categories
