@@ -6,13 +6,15 @@ public class Client
     public string Email { get; }
     public string Direccio { get; }
     public string Contrasenya { get; }
+    public string Role { get; }
 
-    public Client(Guid id, string nom, string email, string direccio, string contrasenya)
+    public Client(Guid id, string nom, string email, string direccio, string contrasenya, string role)
     {
         Id = id;
         Nom = nom;
         Email = email;
         Direccio = direccio;
         Contrasenya = contrasenya;
+        Role = role;
     }
 }
