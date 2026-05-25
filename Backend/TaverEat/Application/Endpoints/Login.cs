@@ -1,9 +1,7 @@
 using Infrastructure.DTO;
-using Microsoft.AspNetCore.Mvc;
 using API.Services;
 using Infrastructure.Interfaces;
 using Domain.Entities;
-
 
 namespace Application.Endpoints;
 
@@ -11,25 +9,31 @@ public static class LoginEndpoint
 {
     public static void MapLoginEndpoints(this WebApplication app)
     {
-       app.MapPost("/login", (LoginRequest request, JwtService jwtService, IClientRepository repo) =>
+        // LOGIN
+        app.MapPost("/login", (LoginRequest request, JwtService jwt, IClientRepository repo) =>
         {
-            try
-            {
-                var client = repo.GetByEmail(request.Email);
+            var client = repo.GetByEmail(request.Email);
 
-                if (client.Contrasenya != request.Contrasenya)
-                    return Results.Unauthorized();
-
-                var token = jwtService.GenerateToken(client.Email);
-
-                return Results.Ok(new AuthResponse(token, client.Email));
-            }
-            catch
-            {
+            if (client is null)
                 return Results.Unauthorized();
-            }
+
+            if (client.Contrasenya != request.Contrasenya)
+                return Results.Unauthorized();
+
+            var token = jwt.GenerateToken(client.Email, client.Role);
+
+            return Results.Ok(new AuthResponse(
+                token,
+                new UserAuthResponse(
+                    client.Id,
+                    client.Nom,
+                    client.Email,
+                    client.Role
+                )
+            ));
         });
-        
+
+        // ME
         app.MapGet("/auth/me", (HttpContext http, IClientRepository repo, JwtService jwt) =>
         {
             var token = http.Request.Headers.Authorization.ToString().Replace("Bearer ", "");
@@ -38,14 +42,19 @@ public static class LoginEndpoint
 
             var user = repo.GetByEmail(email);
 
+            if (user is null)
+                return Results.Unauthorized();
+
             return Results.Ok(new
             {
                 user.Nom,
                 user.Email,
-                user.Direccio
+                user.Direccio,
+                user.Role
             });
         });
 
+        // UPDATE PROFILE
         app.MapPut("/auth/me", (HttpContext http, ClientRequest request, IClientRepository repo, JwtService jwt) =>
         {
             var token = http.Request.Headers.Authorization.ToString().Replace("Bearer ", "");
@@ -54,12 +63,16 @@ public static class LoginEndpoint
 
             var user = repo.GetByEmail(email);
 
+            if (user is null)
+                return Results.Unauthorized();
+
             var updated = new Client(
                 user.Id,
                 request.Nom,
                 request.Email,
                 request.Direccio,
-                user.Contrasenya 
+                request.Contrasenya,
+                user.Role // 🔥 NO se pierde role
             );
 
             repo.Update(updated);
@@ -68,7 +81,8 @@ public static class LoginEndpoint
             {
                 updated.Nom,
                 updated.Email,
-                updated.Direccio
+                updated.Direccio,
+                updated.Role
             });
         });
     }

@@ -7,4 +7,5 @@ public class ClientEntity
     public required string Email { get; set; }
     public required string Direccio { get; set; }
     public required string Contrasenya { get; set; }
+    public required string Role { get; set; }
 }

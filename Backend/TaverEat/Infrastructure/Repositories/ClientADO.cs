@@ -22,7 +22,7 @@ public class ClientADO : IClientRepository
         List<Client> clients = new();
         _dbConn.Open();
 
-        string sql = "SELECT id, nom, email, direccio, contrasenya FROM client";
+        string sql = "SELECT id, nom, email, direccio, contrasenya, role FROM client";
 
         using SqlCommand cmd = new(sql, _dbConn.sqlConnection);
         using SqlDataReader reader = cmd.ExecuteReader();
@@ -39,7 +39,7 @@ public class ClientADO : IClientRepository
     {
         _dbConn.Open();
 
-        string sql = "SELECT id, nom, email, direccio, contrasenya FROM client WHERE id = @id";
+        string sql = "SELECT id, nom, email, direccio, contrasenya, role FROM client WHERE id = @id";
 
         using SqlCommand cmd = new(sql, _dbConn.sqlConnection);
         cmd.Parameters.AddWithValue("@id", id);
@@ -64,7 +64,7 @@ public class ClientADO : IClientRepository
     {
         _dbConn.Open();
 
-        string sql = "SELECT id, nom, email, direccio, contrasenya FROM client WHERE email = @email";
+        string sql = "SELECT id, nom, email, direccio, contrasenya, role FROM client WHERE email = @email";
 
         using SqlCommand cmd = new(sql, _dbConn.sqlConnection);
         cmd.Parameters.AddWithValue("@email", email);
@@ -89,8 +89,8 @@ public class ClientADO : IClientRepository
     {
         _dbConn.Open();
 
-        string sql = @"INSERT INTO client (id, nom, email, direccio, contrasenya)
-                       VALUES (@id, @nom, @email, @direccio, @contrasenya)";
+        string sql = @"INSERT INTO client (id, nom, email, direccio, contrasenya, role)
+                       VALUES (@id, @nom, @email, @direccio, @contrasenya, @role)";
 
         using SqlCommand cmd = new(sql, _dbConn.sqlConnection);
 
@@ -101,6 +101,7 @@ public class ClientADO : IClientRepository
         cmd.Parameters.AddWithValue("@email", entity.Email);
         cmd.Parameters.AddWithValue("@direccio", entity.Direccio);
         cmd.Parameters.AddWithValue("@contrasenya", entity.Contrasenya);
+        cmd.Parameters.AddWithValue("@role", entity.Role);
 
         cmd.ExecuteNonQuery();
 
@@ -154,6 +155,7 @@ public class ClientADO : IClientRepository
         Nom = r.GetString(1),
         Email = r.GetString(2),
         Direccio = r.GetString(3),
-        Contrasenya = r.GetString(4)
+        Contrasenya = r.GetString(4),
+        Role = r.GetString(5)
     };
 }

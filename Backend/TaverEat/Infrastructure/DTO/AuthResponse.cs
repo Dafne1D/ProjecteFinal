@@ -1,3 +1,3 @@
 namespace Infrastructure.DTO;
 
-public record AuthResponse(string Token, string Email);
+public record AuthResponse(string Token, UserAuthResponse User);

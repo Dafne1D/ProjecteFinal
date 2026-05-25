@@ -1,59 +1,64 @@
-using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 using Microsoft.IdentityModel.Tokens;
 
 namespace API.Services;
 
 public class JwtService
 {
-    private readonly IConfiguration _configuration;
+    private readonly string _key = "super_s3cret_keY_very_1ong_03572989310";
 
-    public JwtService(IConfiguration configuration)
+    // GENERAR TOKEN
+    public string GenerateToken(string email, string role)
     {
-        _configuration = configuration;
-    }
-
-    public string GenerateToken(string email)
-    {
-        var claims = new[]
+        var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Email, email)
+            new Claim(ClaimTypes.Email, email),
+            new Claim(ClaimTypes.Role, role)
         };
 
         var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(
-                _configuration["Jwt:JwtSecretKey"]!
-            )
+            Encoding.UTF8.GetBytes(_key)
         );
 
-        var credentials = new SigningCredentials(
+        var creds = new SigningCredentials(
             key,
             SecurityAlgorithms.HmacSha256
         );
 
         var token = new JwtSecurityToken(
-            issuer: _configuration["Jwt:Issuer"],
-            audience: _configuration["Jwt:Audience"],
+            issuer: "TaverEat",
+            audience: "TaverEatUsers",
             claims: claims,
             expires: DateTime.UtcNow.AddDays(7),
-            signingCredentials: credentials
+            signingCredentials: creds
         );
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
+
+    // VALIDAR TOKEN (EMAIL)
     public string ValidateAndGetEmail(string token)
     {
         var handler = new JwtSecurityTokenHandler();
 
         var jwt = handler.ReadJwtToken(token);
 
-        var email = jwt.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email 
-                        || c.Type == "email")?.Value;
+        return jwt.Claims
+            .First(x => x.Type == ClaimTypes.Email)
+            .Value;
+    }
 
-        if (email == null)
-            throw new Exception("Invalid token: email not found");
+    // SACAR ROLE
+    public string GetRole(string token)
+    {
+        var handler = new JwtSecurityTokenHandler();
 
-        return email;
+        var jwt = handler.ReadJwtToken(token);
+
+        return jwt.Claims
+            .First(x => x.Type == ClaimTypes.Role)
+            .Value;
     }
 }
