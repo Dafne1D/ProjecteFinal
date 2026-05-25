@@ -38,4 +38,5 @@ app.MapProductEndpoints();
 app.MapComandaVendaEndpoints();
 app.MapClientEndpoints();
 app.MapLoginEndpoints();
+app.MapAdminEndpoints();
 app.Run();

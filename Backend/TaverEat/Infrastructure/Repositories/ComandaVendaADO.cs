@@ -211,6 +211,47 @@ public class ComandaVendaADO : IComandaVendaRepository
         return result;
     }
 
+    public List<ComandaVenda> GetAll()
+    {
+        _dbConn.Open();
+
+        string sql= @"SELECT id, client_id, entrega_dir, data, estat
+                   FROM comanda_venda
+                   WHERE estat != 'entregada'
+                   ORDER BY data ASC";
+        using var cmd = new SqlCommand(sql, _dbConn.sqlConnection);
+        using var reader = cmd.ExecuteReader();
+
+        List<ComandaVenda> comandes = new();
+        while (reader.Read())
+        {
+            comandes.Add(
+                ComandaVendaMapper.ToDomain(
+                    ReadEntity(reader)
+                )
+            );
+        }
+        _dbConn.Close();
+
+        return comandes;
+    }
+
+    public void UpdateEstat(Guid comandaId, string estat)
+    {
+        _dbConn.Open();
+        string sql = @"UPDATE comanda_venda
+                   SET estat = @estat
+                   WHERE id = @id";
+        using var cmd = new SqlCommand(sql, _dbConn.sqlConnection);
+
+        cmd.Parameters.AddWithValue("@estat", estat);
+        cmd.Parameters.AddWithValue("@comandaId", comandaId);
+
+        cmd.ExecuteNonQuery();
+
+        _dbConn.Close();
+    }
+
     private static ComandaVendaEntity ReadEntity(SqlDataReader r)
         => new ComandaVendaEntity
     {

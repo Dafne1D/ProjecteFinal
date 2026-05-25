@@ -19,4 +19,7 @@ public interface IComandaVendaRepository
     List<(ComandaVendaLinea linea, Product producte)> GetLineasWithProducte(Guid comandaId);
 
     void ConfirmarComanda(Guid comandaId);
+
+    List<ComandaVenda> GetAll (); 
+    void UpdateEstat(Guid comandaId, string estat);
 }
