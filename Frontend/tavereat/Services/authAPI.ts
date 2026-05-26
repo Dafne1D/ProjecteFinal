@@ -5,16 +5,12 @@ export const setToken = (token: string) => {
   window.dispatchEvent(new Event("auth-change"));
 };
 
+export const getToken = () => localStorage.getItem(TOKEN_KEY);
+
 export const logout = () => {
   localStorage.removeItem(TOKEN_KEY);
   window.dispatchEvent(new Event("auth-change"));
   window.location.href = "/";
 };
 
-export const getToken = () => {
-  return localStorage.getItem(TOKEN_KEY);
-};
-
-export const isLoggedIn = () => {
-  return !!getToken();
-};
+export const isLoggedIn = () => !!getToken();

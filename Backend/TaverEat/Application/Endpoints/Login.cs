@@ -14,9 +14,6 @@ public static class LoginEndpoint
         {
             var client = repo.GetByEmail(request.Email);
 
-            if (client is null)
-                return Results.Unauthorized();
-
             if (client.Contrasenya != request.Contrasenya)
                 return Results.Unauthorized();
 
@@ -29,7 +26,8 @@ public static class LoginEndpoint
                     client.Nom,
                     client.Email,
                     client.Role
-                )
+                ),
+                client.Role
             ));
         });
 
@@ -72,7 +70,7 @@ public static class LoginEndpoint
                 request.Email,
                 request.Direccio,
                 request.Contrasenya,
-                user.Role // 🔥 NO se pierde role
+                user.Role // NO se pierde role
             );
 
             repo.Update(updated);

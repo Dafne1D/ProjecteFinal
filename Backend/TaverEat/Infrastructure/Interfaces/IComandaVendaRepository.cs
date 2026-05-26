@@ -16,10 +16,14 @@ public interface IComandaVendaRepository
 
     void DeleteLinea(Guid lineaId);
 
-    List<(ComandaVendaLinea linea, Product producte)> GetLineasWithProducte(Guid comandaId);
+    List<(ComandaVendaLinea linea, Product producte)>
+        GetLineasWithProducte(Guid comandaId);
 
     void ConfirmarComanda(Guid comandaId);
 
-    List<ComandaVenda> GetAll (); 
+    List<ComandaVenda> GetAll();
+
     void UpdateEstat(Guid comandaId, string estat);
+    void SetEntregaDir(Guid comandaId, string direccioId);
+    
 }

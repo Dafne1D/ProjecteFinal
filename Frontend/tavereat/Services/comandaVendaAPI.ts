@@ -59,3 +59,38 @@ export const deleteFromCart = async (producteId: string) => {
 
   return;
 };
+
+export const assignarDireccio = async (
+  direccioId: string
+) => {
+  const res = await authFetch(
+    `${API_URL}/cart/direccio`,
+    {
+      method: "PUT",
+      body: JSON.stringify({
+        direccioId,
+      }),
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error("ERROR_ASSIGNAR_DIRECCIO");
+  }
+
+  return res.json();
+};
+
+export const confirmarComanda = async () => {
+  const res = await authFetch(
+    `${API_URL}/cart/confirmar`,
+    {
+      method: "POST",
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error("ERROR_CONFIRMAR_COMANDA");
+  }
+
+  return res.json();
+};

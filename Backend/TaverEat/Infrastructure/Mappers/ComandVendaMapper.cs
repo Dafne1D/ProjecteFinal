@@ -13,8 +13,8 @@ public static ComandaVenda ToDomain(ComandaVendaEntity entity)
         {
             Id = comanda.Id,
             ClientId = comanda.ClientId,
+            EntregaDir = comanda.EntregaDir,
             Data = comanda.Data,
             Estat = comanda.Estat,
-            EntregaDir = comanda.EntregaDir
         };
 }

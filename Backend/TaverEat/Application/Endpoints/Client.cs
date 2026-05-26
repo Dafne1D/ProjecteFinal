@@ -65,5 +65,29 @@ public static class ClientEndpoint
             var deleted = repo.Delete(id);
             return deleted ? Results.Ok() : Results.NotFound();
         });
+
+        app.MapGet("/client/direction", (
+            HttpContext http,
+            IClientRepository repo,
+            JwtService jwt
+        ) =>
+        {
+            var token = http.Request.Headers.Authorization
+                .ToString()
+                .Replace("Bearer ", "");
+
+            var email = jwt.ValidateAndGetEmail(token);
+
+            var client = repo.GetByEmail(email);
+
+            if (client is null)
+                return Results.NotFound();
+
+            return Results.Ok(new
+            {
+                direccio = client.Direccio,
+                EntregaDir = client.Direccio
+            });
+        });
     }
 }

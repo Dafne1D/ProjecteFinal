@@ -1,5 +1,6 @@
-namespace Infrastructure.DTO;
+using System.Text.Json.Serialization;
 
+namespace Infrastructure.DTO;
 public record UpdateEstatComandaRequest(
-    string Estat
+    [property: JsonPropertyName("estat")] string Estat
 );

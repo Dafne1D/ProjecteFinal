@@ -1,11 +1,18 @@
 "use client";
 
 import { useCart } from "@/context/CartContext";
+import { useState } from "react";
 import { X, Plus, Minus, Trash } from "lucide-react";
-import { updateCartItem, deleteFromCart } from "@/Services/comandaVendaAPI";
+import {
+  updateCartItem,
+  deleteFromCart,
+  assignarDireccio,
+  confirmarComanda,
+} from "@/Services/comandaVendaAPI";
 
 export default function CartDrawer() {
   const { open, setOpen, cart, refreshCart, loading } = useCart();
+  const [selectedDireccio, setSelectedDireccio] = useState("");
 
   const inc = async (producteId: string) => {
     try {
@@ -31,6 +38,26 @@ export default function CartDrawer() {
       await refreshCart();
     } catch (err) {
       console.error("Error eliminant:", err);
+    }
+  };
+
+  const handleCheckout = async () => {
+    try {
+      if (!selectedDireccio) {
+        alert("Selecciona una direcció");
+        return;
+      }
+
+      // guardar dirección
+      await assignarDireccio(selectedDireccio);
+
+      await confirmarComanda();
+
+      await refreshCart();
+
+      alert("Comanda confirmada!");
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -125,6 +152,7 @@ export default function CartDrawer() {
         </div>
 
         <button
+          onClick={handleCheckout}
           disabled={!cart || cart.productes.length === 0}
           className={`
             w-full py-2 rounded-xl font-semibold transition

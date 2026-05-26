@@ -44,21 +44,23 @@ public class ComandaVendaADO : IComandaVendaRepository
         {
             Id = Guid.NewGuid(),
             ClientId = clientId,
+            EntregaDir = null,
             Data = DateTime.UtcNow,
             Estat = "pendent"
         };
 
         _dbConn.Open();
 
-        string sql = @"INSERT INTO comanda_venda (id, client_id, data, estat)
-                       VALUES (@id, @clientId, @data, @estat)";
+        string sql = @"INSERT INTO comanda_venda(id, client_id, entrega_dir, data, estat)
+            VALUES(@id, @client_id, @entrega_dir, @data, @estat)";
 
         using var cmd = new SqlCommand(sql, _dbConn.sqlConnection);
 
-        cmd.Parameters.AddWithValue("@id", entity.Id);
-        cmd.Parameters.AddWithValue("@clientId", entity.ClientId);
-        cmd.Parameters.AddWithValue("@data", entity.Data);
-        cmd.Parameters.AddWithValue("@estat", entity.Estat);
+            cmd.Parameters.AddWithValue("@id", entity.Id);
+            cmd.Parameters.AddWithValue("@client_id", entity.ClientId);
+            cmd.Parameters.AddWithValue("@entrega_dir",(object?)entity.EntregaDir ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@data", entity.Data);
+            cmd.Parameters.AddWithValue("@estat", entity.Estat);
 
         cmd.ExecuteNonQuery();
 
@@ -244,8 +246,27 @@ public class ComandaVendaADO : IComandaVendaRepository
                    WHERE id = @id";
         using var cmd = new SqlCommand(sql, _dbConn.sqlConnection);
 
+        cmd.Parameters.AddWithValue("@id", comandaId);
         cmd.Parameters.AddWithValue("@estat", estat);
-        cmd.Parameters.AddWithValue("@comandaId", comandaId);
+
+        cmd.ExecuteNonQuery();
+
+        _dbConn.Close();
+    }
+
+    public void SetEntregaDir(Guid comandaId, string direccio)
+    {
+        _dbConn.Open();
+
+        string sql = @"
+            UPDATE comanda_venda
+            SET entrega_dir = @direccio
+            WHERE id = @id";
+
+        using var cmd = new SqlCommand(sql, _dbConn.sqlConnection);
+
+        cmd.Parameters.AddWithValue("@direccio", direccio);
+        cmd.Parameters.AddWithValue("@id", comandaId);
 
         cmd.ExecuteNonQuery();
 
@@ -257,7 +278,7 @@ public class ComandaVendaADO : IComandaVendaRepository
     {
         Id = r.GetGuid(0),
         ClientId = r.GetGuid(1),
-        EntregaDir = r.IsDBNull(2) ? Guid.Empty : r.GetGuid(2),
+        EntregaDir = r.IsDBNull(2) ? null : r.GetString(2),
         Data = r.GetDateTime(3),
         Estat = r.GetString(4)
     };

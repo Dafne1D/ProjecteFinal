@@ -127,5 +127,36 @@ public static class ComandaVendaEndpoint
 
             return Results.Ok();
         });
+
+        app.MapPost("/cart/checkout", (
+            HttpContext http,
+            IComandaVendaRepository repo,
+            IClientRepository clientRepo,
+            JwtService jwt
+        ) =>
+        {
+            var token = http.Request.Headers.Authorization
+                .ToString()
+                .Replace("Bearer ", "");
+
+            var email = jwt.ValidateAndGetEmail(token);
+
+            var client = clientRepo.GetByEmail(email);
+
+            var comanda = repo.GetComandaActivaByClient(client.Id);
+
+            if (comanda is null)
+                return Results.NotFound();
+
+            repo.SetEntregaDir(comanda.Id, client.Direccio);
+
+            repo.ConfirmarComanda(comanda.Id);
+
+            return Results.Ok(new
+            {
+                message = "Comanda confirmada",
+                direccio = client.Direccio
+            });
+        });
     }
 }
