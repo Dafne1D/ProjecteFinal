@@ -1,5 +1,4 @@
 const API_URL = "http://localhost:5000";
-
 export const getProductImage = async (
   productId: string
 ): Promise<{ url: string } | null> => {

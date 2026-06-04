@@ -15,7 +15,6 @@ export type Cart = {
   total: number;
 };
 
-// ADD
 export const addToCart = async (producteId: string) => {
   const res = await authFetch(`${API_URL}/cart/add`, {
     method: "POST",
@@ -23,10 +22,11 @@ export const addToCart = async (producteId: string) => {
   });
 
   if (!res.ok) throw new Error("Error afegint producte");
-  return res.json();
+
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
 };
 
-// GET
 export const getCart = async (): Promise<Cart> => {
   const res = await authFetch(`${API_URL}/cart`);
 
@@ -35,62 +35,45 @@ export const getCart = async (): Promise<Cart> => {
   return res.json();
 };
 
-// PUT item
 export const updateCartItem = async (producteId: string, quantitat: number) => {
   const res = await authFetch(
     `${API_URL}/cart/item/update?producteId=${producteId}&quantitat=${quantitat}`,
-    {
-      method: "PUT",
-    }
+    { method: "PUT" }
   );
 
   if (!res.ok) throw new Error("Error actualitzant item");
 
-  return res.json();
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
 };
 
-// REMOVE
 export const deleteFromCart = async (producteId: string) => {
   const res = await authFetch(`${API_URL}/cart/item/${producteId}`, {
     method: "DELETE",
   });
 
   if (!res.ok) throw new Error("Error eliminant item");
-
-  return;
 };
 
-export const assignarDireccio = async (
-  direccioId: string
-) => {
-  const res = await authFetch(
-    `${API_URL}/cart/direccio`,
-    {
-      method: "PUT",
-      body: JSON.stringify({
-        direccioId,
-      }),
-    }
-  );
+export const assignarDireccio = async (direccioId: string) => {
+  const res = await authFetch(`${API_URL}/cart/direccio`, {
+    method: "PUT",
+    body: JSON.stringify({ direccioId }),
+  });
 
-  if (!res.ok) {
-    throw new Error("ERROR_ASSIGNAR_DIRECCIO");
-  }
+  if (!res.ok) throw new Error("ERROR_ASSIGNAR_DIRECCIO");
 
-  return res.json();
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
 };
 
 export const confirmarComanda = async () => {
-  const res = await authFetch(
-    `${API_URL}/cart/confirmar`,
-    {
-      method: "POST",
-    }
-  );
+  const res = await authFetch(`${API_URL}/cart/confirmar`, {
+    method: "POST",
+  });
 
-  if (!res.ok) {
-    throw new Error("ERROR_CONFIRMAR_COMANDA");
-  }
+  if (!res.ok) throw new Error("ERROR_CONFIRMAR_COMANDA");
 
-  return res.json();
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
 };

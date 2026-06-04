@@ -20,7 +20,13 @@ public static class AdminEndpoint
             IAdminComandaRepository repo
         ) =>
         {
-            var token = http.Request.Headers.Authorization.ToString().Replace("Bearer ", "");
+            var token = http.Request.Headers.Authorization
+                .ToString()
+                .Replace("Bearer ", "");
+
+            if (string.IsNullOrWhiteSpace(token))
+                return Results.Unauthorized();
+
             var email = jwt.ValidateAndGetEmail(token);
 
             var user = clientRepo.GetByEmail(email);
@@ -55,19 +61,35 @@ public static class AdminEndpoint
             IAdminComandaRepository repo
         ) =>
         {
-            var token = http.Request.Headers.Authorization.ToString().Replace("Bearer ", "");
+            var token = http.Request.Headers.Authorization
+                .ToString()
+                .Replace("Bearer ", "");
+
+            if (string.IsNullOrWhiteSpace(token))
+                return Results.Unauthorized();
+
             var email = jwt.ValidateAndGetEmail(token);
 
             var user = clientRepo.GetByEmail(email);
+
+            if (user is null)
+                return Results.Unauthorized();
 
             if (!IsAdmin(user.Role))
                 return Results.Forbid();
 
             var comanda = repo.GetById(id);
+
             if (comanda is null)
                 return Results.NotFound();
 
-            var validStates = new[] { "pendent", "preparant", "repartiment", "entregada" };
+            var validStates = new[]
+            {
+                "pendent",
+                "preparant",
+                "repartiment",
+                "entregada"
+            };
 
             if (!validStates.Contains(request.Estat.ToLower()))
                 return Results.BadRequest("Estat no vàlid");

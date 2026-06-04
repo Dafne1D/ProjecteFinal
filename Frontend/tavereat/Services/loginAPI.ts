@@ -1,5 +1,4 @@
 const API_URL = "http://localhost:5000"; 
-
 export interface LoginRequest {
   email: string;
   contrasenya: string;

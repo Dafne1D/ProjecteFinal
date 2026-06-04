@@ -17,7 +17,10 @@ export const authFetch = async (url: string, options: RequestInit = {}) => {
     headers,
   });
 
-  if (res.status === 401) throw new Error("UNAUTHORIZED");
+  if (res.status === 401) {
+    window.location.href = "/login";
+    throw new Error("UNAUTHORIZED");
+  }
   if (res.status === 403) throw new Error("FORBIDDEN");
 
   return res;

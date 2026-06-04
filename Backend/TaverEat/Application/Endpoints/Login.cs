@@ -34,7 +34,12 @@ public static class LoginEndpoint
         // ME
         app.MapGet("/auth/me", (HttpContext http, IClientRepository repo, JwtService jwt) =>
         {
-            var token = http.Request.Headers.Authorization.ToString().Replace("Bearer ", "");
+            var token = http.Request.Headers.Authorization
+                .ToString()
+                .Replace("Bearer ", "");
+
+            if (string.IsNullOrWhiteSpace(token))
+                return Results.Unauthorized();
 
             var email = jwt.ValidateAndGetEmail(token);
 
@@ -53,9 +58,19 @@ public static class LoginEndpoint
         });
 
         // UPDATE PROFILE
-        app.MapPut("/auth/me", (HttpContext http, ClientRequest request, IClientRepository repo, JwtService jwt) =>
+        app.MapPut("/auth/me", (
+            HttpContext http,
+            ClientRequest request,
+            IClientRepository repo,
+            JwtService jwt
+        ) =>
         {
-            var token = http.Request.Headers.Authorization.ToString().Replace("Bearer ", "");
+            var token = http.Request.Headers.Authorization
+                .ToString()
+                .Replace("Bearer ", "");
+
+            if (string.IsNullOrWhiteSpace(token))
+                return Results.Unauthorized();
 
             var email = jwt.ValidateAndGetEmail(token);
 
@@ -70,7 +85,7 @@ public static class LoginEndpoint
                 request.Email,
                 request.Direccio,
                 request.Contrasenya,
-                user.Role // NO se pierde role
+                user.Role
             );
 
             repo.Update(updated);

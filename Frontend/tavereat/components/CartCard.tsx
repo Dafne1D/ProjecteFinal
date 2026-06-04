@@ -8,30 +8,42 @@ import {
   deleteFromCart,
   assignarDireccio,
   confirmarComanda,
+  CartLinea
 } from "@/Services/comandaVendaAPI";
 
 export default function CartDrawer() {
   const { open, setOpen, cart, refreshCart, loading } = useCart();
   const [selectedDireccio, setSelectedDireccio] = useState("");
 
-  const inc = async (producteId: string) => {
+  // INCREMENTAR
+  const inc = async (item: CartLinea) => {
     try {
-      await updateCartItem(producteId, 1);
-      await refreshCart();
+      const updatedCart = await updateCartItem(
+        item.producteId,
+        item.quantitat + 1
+      );
+
+      if (updatedCart) {
+        await refreshCart();
+      }
     } catch (err) {
-      console.error("Error incrementant producte:", err);
+      console.error(err);
     }
   };
 
-  const dec = async (producteId: string) => {
+  //  DECREMENTAR
+  const dec = async (item: CartLinea) => {
     try {
-      await updateCartItem(producteId, -1);
+      const newQty = item.quantitat - 1;
+
+      await updateCartItem(item.producteId, newQty);
       await refreshCart();
     } catch (err) {
-      console.error("Error eliminant producte:", err);
+      console.error("Error reduint producte:", err);
     }
   };
 
+  //  eliminar
   const remove = async (producteId: string) => {
     try {
       await deleteFromCart(producteId);
@@ -48,11 +60,8 @@ export default function CartDrawer() {
         return;
       }
 
-      // guardar dirección
       await assignarDireccio(selectedDireccio);
-
       await confirmarComanda();
-
       await refreshCart();
 
       alert("Comanda confirmada!");
@@ -75,7 +84,7 @@ export default function CartDrawer() {
 
         <button
           onClick={() => setOpen(false)}
-          className="p-2 rounded-lg hover:bg-slate-100 transition"
+          className="p-2 rounded-lg hover:bg-slate-100"
         >
           <X size={20} />
         </button>
@@ -99,14 +108,12 @@ export default function CartDrawer() {
             className="border rounded-xl p-3 space-y-2"
           >
             {/* HEADER ITEM */}
-            <div className="flex justify-between items-start">
-              <span className="font-semibold text-slate-800">
-                {item.nom}
-              </span>
+            <div className="flex justify-between">
+              <span className="font-semibold">{item.nom}</span>
 
               <button
                 onClick={() => remove(item.producteId)}
-                className="text-red-500 hover:text-red-600"
+                className="text-red-500"
               >
                 <Trash size={16} />
               </button>
@@ -120,7 +127,7 @@ export default function CartDrawer() {
 
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() => dec(item.producteId)}
+                  onClick={() => dec(item)}
                   className="p-1 rounded hover:bg-slate-100"
                 >
                   <Minus size={16} />
@@ -131,7 +138,7 @@ export default function CartDrawer() {
                 </span>
 
                 <button
-                  onClick={() => inc(item.producteId)}
+                  onClick={() => inc(item)}
                   className="p-1 rounded hover:bg-slate-100"
                 >
                   <Plus size={16} />
@@ -154,14 +161,12 @@ export default function CartDrawer() {
         <button
           onClick={handleCheckout}
           disabled={!cart || cart.productes.length === 0}
-          className={`
-            w-full py-2 rounded-xl font-semibold transition
+          className={`w-full py-2 rounded-xl font-semibold transition
             ${
               !cart || cart.productes.length === 0
                 ? "bg-slate-200 text-slate-400"
                 : "bg-sky-500 text-white hover:bg-sky-600"
-            }
-          `}
+            }`}
         >
           Finalitzar comanda
         </button>

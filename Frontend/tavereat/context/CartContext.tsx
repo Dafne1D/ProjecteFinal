@@ -26,10 +26,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(false);
 
   const refreshCart = useCallback(async () => {
+    setLoading(true);
+
     try {
-      setLoading(true);
       const data = await getCart();
-      setCart(data);
+
+      // 🔥 importante: reemplazo total del estado
+      setCart(structuredClone(data));
     } catch (err) {
       console.error("Cart error:", err);
       setCart(null);
@@ -38,14 +41,18 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  // SOLO cargar si hay token
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) refreshCart();
+
+    if (token) {
+      refreshCart();
+    }
   }, [refreshCart]);
 
   return (
-    <CartContext.Provider value={{ open, setOpen, cart, refreshCart, loading }}>
+    <CartContext.Provider
+      value={{ open, setOpen, cart, refreshCart, loading }}
+    >
       {children}
     </CartContext.Provider>
   );

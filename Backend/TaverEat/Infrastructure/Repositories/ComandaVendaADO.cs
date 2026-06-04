@@ -118,17 +118,16 @@ public class ComandaVendaADO : IComandaVendaRepository
         _dbConn.Open();
 
         string sql = @"UPDATE comanda_venda_linea
-                       SET quantitat = @quantitat
-                       WHERE id_comanda_venda = @comandaId
-                       AND producte_id = @producteId";
+                    SET quantitat = @quantitat
+                    WHERE id = @id";
 
         using var cmd = new SqlCommand(sql, _dbConn.sqlConnection);
 
+        cmd.Parameters.AddWithValue("@id", linea.Id);
         cmd.Parameters.AddWithValue("@quantitat", linea.Quantitat);
-        cmd.Parameters.AddWithValue("@comandaId", linea.ComandaId);
-        cmd.Parameters.AddWithValue("@producteId", linea.ProducteId);
 
-        cmd.ExecuteNonQuery();
+        var rows = cmd.ExecuteNonQuery();
+        Console.WriteLine($"ROWS UPDATED: {rows}");
 
         _dbConn.Close();
     }
